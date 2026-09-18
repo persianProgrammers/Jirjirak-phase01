@@ -13,7 +13,6 @@ export function AudioToggle() {
       onClick={() => setIsMuted(!isMuted)}
       className="relative w-10 h-10 lg:w-[50px] lg:h-[50px] flex items-center justify-center cursor-pointer group pointer-events-auto bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 hover:border-brand-yellow/40 transition-all duration-500 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden shrink-0"
       aria-label={isMuted ? "Unmute sound" : "Mute sound"}
-      title={isMuted ? "Play Ambience" : "Mute Ambience"}
     >
       {/* Ambient Background Glow when active */}
       <div 

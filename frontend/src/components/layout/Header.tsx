@@ -12,11 +12,11 @@ export function Header() {
   const menuVariants = {
     closed: { 
       clipPath: "circle(0% at 100% 0%)",
-      transition: { type: "spring", bounce: 0, duration: 0.8 }
+      transition: { type: "spring" as const, bounce: 0, duration: 0.8 }
     },
     open: { 
       clipPath: "circle(150% at 100% 0%)",
-      transition: { type: "spring", bounce: 0, duration: 0.8 }
+      transition: { type: "spring" as const, bounce: 0, duration: 0.8 }
     }
   };
 
@@ -25,7 +25,7 @@ export function Header() {
     open: (i: number) => ({
       y: 0, 
       opacity: 1,
-      transition: { delay: i * 0.1 + 0.2, duration: 0.5, ease: "easeOut" }
+      transition: { delay: i * 0.1 + 0.2, duration: 0.5, ease: "easeOut" as const }
     })
   };
 

@@ -1,23 +1,17 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
+import { useGlobalStore } from '../../stores/globalStore';
 
 export function LanguageToggle() {
-  const [lang, setLang] = useState<'EN' | 'FA'>('EN');
-
-  const isFa = lang === 'FA';
-
-  const toggleLanguage = () => {
-    setLang(isFa ? 'EN' : 'FA');
-  };
+  const { currentLang, toggleLang } = useGlobalStore();
+  const isFa = currentLang === 'FA';
 
   const activeColor = "#FFF083";
 
   return (
     <button
-      onClick={toggleLanguage}
+      onClick={toggleLang}
       className="relative w-10 h-10 lg:w-[50px] lg:h-[50px] flex items-center justify-center cursor-pointer group pointer-events-auto bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 hover:border-brand-yellow/40 transition-all duration-500 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden shrink-0"
       aria-label="Toggle Language"
-      title={isFa ? "Switch to English" : "Switch to Persian"}
     >
       {/* Mechanical Typewriter Key Interface */}
       <div className="relative flex items-center justify-center pointer-events-none w-full h-full" style={{ perspective: '800px' }}>

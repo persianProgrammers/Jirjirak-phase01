@@ -3,8 +3,7 @@ import { gsap } from '../../../animations/gsap';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useNavigate } from 'react-router-dom';
 import { useGlobalStore } from '../../../stores/globalStore';
-import { DayFloatingFx, DayFxType } from '../components/DayFloatingFx';
-import { DayFxSwitcher } from '../components/DayFxSwitcher';
+import { ArchitecturalClouds } from '../components/ArchitecturalClouds';
 
 export function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
@@ -12,10 +11,6 @@ export function HeroSection() {
   const navigate = useNavigate();
   const [isMapLocked, setIsMapLocked] = useState(true);
   const { isNight } = useGlobalStore();
-  
-  // Day Mode Floating FX Test Lab State
-  const [dayFxType, setDayFxType] = useState<DayFxType>('paper-planes');
-  const [dayFxEnabled, setDayFxEnabled] = useState<boolean>(true);
 
   // Night Mode: Fireflies
   const firefliesCount = 42;
@@ -152,10 +147,8 @@ export function HeroSection() {
         </div>
       )}
 
-      {/* Day Mode: Modular Floating Ambient FX (۵ طرح پیشنهادی با امکان تست زنده) */}
-      {!isNight && (
-        <DayFloatingFx type={dayFxType} enabled={dayFxEnabled} />
-      )}
+      {/* Day Mode: Architectural Contour Clouds (کانتور معمارانه بهینه برای موبایل و دسکتاپ) */}
+      {!isNight && <ArchitecturalClouds />}
 
       {/* =========================================================================
          [RESERVED FOR FUTURE SEASONAL FEATURE - LEAF SVGs]
@@ -485,15 +478,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-
-      {/* Day Ambient FX Testing & Switching Panel */}
-      <DayFxSwitcher 
-        currentType={dayFxType} 
-        onChangeType={setDayFxType} 
-        enabled={dayFxEnabled} 
-        onToggleEnabled={() => setDayFxEnabled(!dayFxEnabled)} 
-        isNight={isNight} 
-      />
     </section>
   );
 }
