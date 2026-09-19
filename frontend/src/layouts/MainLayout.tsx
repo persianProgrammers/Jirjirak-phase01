@@ -42,7 +42,7 @@ export default function MainLayout() {
       <VintageJazzCapsule />
 
       {/* Floating Controls Container (Bottom Right - 3 Stable Core Buttons) */}
-      <div className="fixed bottom-4 right-2 sm:bottom-6 sm:right-4 lg:bottom-10 lg:right-8 z-[60] flex flex-col gap-3 pointer-events-none items-end">
+      <div className="fixed bottom-4 right-2 sm:bottom-6 sm:right-4 lg:bottom-10 lg:right-8 rtl:right-auto rtl:left-2 rtl:sm:left-4 rtl:lg:left-8 z-[60] flex flex-col gap-3 pointer-events-none items-end rtl:items-start">
         {/* 🌙☀️ Day / Night Astrolabe Celestial Toggle */}
         <DayNightToggle />
 

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { ambientAudio } from '../services/ambientAudio';
 
 interface GlobalState {
   isWorldLoaded: boolean;
@@ -12,8 +13,12 @@ interface GlobalState {
   setLang: (lang: 'EN' | 'FA') => void;
   toggleLang: () => void;
 
+  // Audio State (Original Gramophone)
+  isPlaying: boolean;
+  setIsPlaying: (playing: boolean) => void;
+  togglePlay: () => void;
+
   // Screen Transition State
-  // phase: 'idle' | 'covering' | 'paused' (4 seconds hold) | 'uncovering'
   transitionPhase: 'idle' | 'covering' | 'paused' | 'uncovering';
   triggerTransition: (action: () => void) => void;
 }
@@ -22,11 +27,16 @@ export const useGlobalStore = create<GlobalState>((set, get) => ({
   isWorldLoaded: false,
   setWorldLoaded: (loaded) => set({ isWorldLoaded: loaded }),
   isNight: true,
-  setIsNight: (night) => set({ isNight: night }),
+  setIsNight: (night) => {
+    set({ isNight: night });
+    ambientAudio.setNightMode(night);
+  },
   toggleNight: () => {
     const { triggerTransition, isNight } = get();
     triggerTransition(() => {
-      set({ isNight: !isNight });
+      const nextNight = !isNight;
+      set({ isNight: nextNight });
+      ambientAudio.setNightMode(nextNight);
     });
   },
 
@@ -39,6 +49,26 @@ export const useGlobalStore = create<GlobalState>((set, get) => ({
     triggerTransition(() => {
       set({ currentLang: nextLang });
     });
+  },
+
+  // Audio Playback
+  isPlaying: false,
+  setIsPlaying: (playing: boolean) => {
+    if (playing) {
+      ambientAudio.play(get().isNight);
+    } else {
+      ambientAudio.stop();
+    }
+    set({ isPlaying: playing });
+  },
+  togglePlay: () => {
+    const nextPlaying = !get().isPlaying;
+    if (nextPlaying) {
+      ambientAudio.play(get().isNight);
+    } else {
+      ambientAudio.stop();
+    }
+    set({ isPlaying: nextPlaying });
   },
 
   // Transition State: 

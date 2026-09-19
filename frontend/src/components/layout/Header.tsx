@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import { useGlobalStore } from '../../stores/globalStore';
+import { useTranslation } from '../../i18n/translations';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentLang } = useGlobalStore();
+  const t = useTranslation()(currentLang);
+  const isFa = currentLang === 'FA';
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -11,11 +16,11 @@ export function Header() {
   // Creative animation variants
   const menuVariants = {
     closed: { 
-      clipPath: "circle(0% at 100% 0%)",
+      clipPath: isFa ? "circle(0% at 0% 0%)" : "circle(0% at 100% 0%)",
       transition: { type: "spring" as const, bounce: 0, duration: 0.8 }
     },
     open: { 
-      clipPath: "circle(150% at 100% 0%)",
+      clipPath: isFa ? "circle(150% at 0% 0%)" : "circle(150% at 100% 0%)",
       transition: { type: "spring" as const, bounce: 0, duration: 0.8 }
     }
   };
@@ -38,17 +43,17 @@ export function Header() {
           </Link>
           
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium tracking-wide uppercase">
-            <a href="#world" className="hover:text-brand-yellow transition-colors">World</a>
-            <a href="#work" className="hover:text-brand-yellow transition-colors">Work</a>
-            <a href="#services" className="hover:text-brand-yellow transition-colors">What We Do</a>
-            <Link to="/about" className="hover:text-brand-yellow transition-colors">About</Link>
-            <Link to="/journal" className="hover:text-brand-yellow transition-colors">Journal</Link>
-            <Link to="/contact" className="hover:text-brand-yellow transition-colors">Contact</Link>
+            <a href="#world" className="hover:text-brand-yellow transition-colors">{t.nav.world}</a>
+            <a href="#work" className="hover:text-brand-yellow transition-colors">{t.nav.work}</a>
+            <a href="#services" className="hover:text-brand-yellow transition-colors">{t.nav.services}</a>
+            <Link to="/about" className="hover:text-brand-yellow transition-colors">{t.nav.about}</Link>
+            <Link to="/journal" className="hover:text-brand-yellow transition-colors">{t.nav.journal}</Link>
+            <Link to="/contact" className="hover:text-brand-yellow transition-colors">{t.nav.contact}</Link>
           </nav>
           
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
             <a href="#world" className="px-5 py-2 border border-brand-yellow text-brand-yellow rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-brand-yellow hover:text-brand-dark transition-colors">
-              Enter World
+              {t.nav.enterWorld}
             </a>
           </div>
 
@@ -56,7 +61,7 @@ export function Header() {
           <button 
             className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[70] relative"
             onClick={toggleMenu}
-            aria-label="Toggle menu"
+            aria-label={isMenuOpen ? t.nav.close : t.nav.menu}
           >
             <motion.span 
               animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -89,26 +94,34 @@ export function Header() {
               <div className="w-[300px] h-[300px] bg-brand-yellow rounded-full filter blur-[100px]"></div>
             </div>
 
-            <nav className="flex flex-col gap-6 text-3xl font-bold tracking-tight uppercase relative z-10">
-              {['world', 'work', 'services'].map((item, i) => (
-                <motion.div custom={i} variants={navItemVariants} initial="closed" animate="open" exit="closed" key={item}>
+            <nav className="flex flex-col gap-6 text-2xl sm:text-3xl font-bold tracking-tight uppercase relative z-10">
+              {[
+                { href: '#world', label: t.nav.world },
+                { href: '#work', label: t.nav.work },
+                { href: '#services', label: t.nav.services },
+              ].map((item, i) => (
+                <motion.div custom={i} variants={navItemVariants} initial="closed" animate="open" exit="closed" key={item.href}>
                   <a 
-                    href={`#${item}`} 
+                    href={item.href} 
                     onClick={closeMenu}
                     className="hover:text-brand-yellow transition-colors inline-block"
                   >
-                    {item === 'services' ? 'What We Do' : item}
+                    {item.label}
                   </a>
                 </motion.div>
               ))}
-              {['about', 'journal', 'contact'].map((item, i) => (
-                <motion.div custom={i + 3} variants={navItemVariants} initial="closed" animate="open" exit="closed" key={item}>
+              {[
+                { to: '/about', label: t.nav.about },
+                { to: '/journal', label: t.nav.journal },
+                { to: '/contact', label: t.nav.contact },
+              ].map((item, i) => (
+                <motion.div custom={i + 3} variants={navItemVariants} initial="closed" animate="open" exit="closed" key={item.to}>
                   <Link 
-                    to={`/${item}`} 
+                    to={item.to} 
                     onClick={closeMenu}
                     className="hover:text-brand-yellow transition-colors inline-block"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 </motion.div>
               ))}
@@ -118,8 +131,8 @@ export function Header() {
               custom={6} variants={navItemVariants} initial="closed" animate="open" exit="closed"
               className="mt-12 relative z-10"
             >
-              <a href="#world" onClick={closeMenu} className="inline-block px-6 py-3 border border-brand-yellow text-brand-yellow rounded-full text-sm font-semibold uppercase tracking-wider hover:bg-brand-yellow hover:text-brand-dark transition-colors">
-                Enter World
+              <a href="#world" onClick={closeMenu} className="inline-block text-center px-6 py-3 border border-brand-yellow text-brand-yellow rounded-full text-sm font-semibold uppercase tracking-wider hover:bg-brand-yellow hover:text-brand-dark transition-colors w-full">
+                {t.nav.enterWorld}
               </a>
             </motion.div>
           </motion.div>

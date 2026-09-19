@@ -3,6 +3,7 @@ import { gsap } from '../../../animations/gsap';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useNavigate } from 'react-router-dom';
 import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
 import { ArchitecturalClouds } from '../components/ArchitecturalClouds';
 
 export function HeroSection() {
@@ -10,7 +11,8 @@ export function HeroSection() {
   const textRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [isMapLocked, setIsMapLocked] = useState(true);
-  const { isNight } = useGlobalStore();
+  const { isNight, currentLang } = useGlobalStore();
+  const t = useTranslation()(currentLang);
 
   // Night Mode: Fireflies
   const firefliesCount = 42;
@@ -172,25 +174,25 @@ export function HeroSection() {
           <p className={`text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-3 lg:mb-2 transition-colors duration-700 ${
             isNight ? 'text-brand-gray' : 'text-brand-dark/60'
           }`}>
-            Jirjirak Creative Studio
+            {t.hero.badge}
           </p>
           
           <h1 className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight mb-8 lg:mb-8 transition-colors duration-700 ${
             isNight ? 'text-brand-light' : 'text-brand-dark'
           }`}>
-            Small Studio.<br />
-            Big Ideas.<br />
+            {t.hero.titleLine1}<br />
+            {t.hero.titleLine2}<br />
             <span className={`transition-colors duration-700 ${
               isNight ? 'text-brand-yellow' : 'text-[#a38600]'
             }`}>
-              Real Impact.
+              {t.hero.titleLine3}
             </span>
           </h1>
 
           <p className={`text-sm sm:text-base lg:text-lg mb-12 lg:mb-12 max-w-md leading-relaxed transition-colors duration-700 ${
             isNight ? 'text-brand-gray' : 'text-brand-dark/75'
           }`}>
-            We build digital experiences, brands and products that move people, not just screens.
+            {t.hero.subtitle}
           </p>
           
           <button onClick={() => navigate('/world')} className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
@@ -203,7 +205,7 @@ export function HeroSection() {
             <span className={`text-xs font-bold tracking-widest uppercase transition-colors duration-700 ${
               isNight ? 'text-brand-light' : 'text-brand-dark'
             }`}>
-              Enter World
+              {t.hero.enterWorld}
             </span>
           </button>
 
@@ -213,7 +215,7 @@ export function HeroSection() {
               document.getElementById('mobile-map-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-80 hover:opacity-100 transition-opacity cursor-pointer lg:hidden group"
-            aria-label="Scroll down to map"
+            aria-label={t.hero.hopDown}
           >
             {/* Minimalist cricket/bug antennae icon */}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`transition-colors duration-700 ${
@@ -227,7 +229,7 @@ export function HeroSection() {
             <span className={`text-[8px] font-bold tracking-[0.2em] uppercase transition-colors duration-700 mt-1 ${
               isNight ? 'text-brand-gray group-hover:text-brand-yellow' : 'text-brand-dark/60 group-hover:text-brand-dark'
             }`}>
-              Hop Down
+              {t.hero.hopDown}
             </span>
           </button>
           
@@ -314,7 +316,7 @@ export function HeroSection() {
                     <span className={`font-mono text-[9px] tracking-[0.3em] uppercase ${
                       isNight ? 'text-brand-yellow' : 'text-brand-dark'
                     }`}>
-                      Map.Sys // Live Feed
+                      {t.hero.mapFeed}
                     </span>
                   </div>
                 </div>
@@ -390,7 +392,7 @@ export function HeroSection() {
                       {/* Locked State Overlay */}
                       {isMapLocked && (
                         <div 
-                          className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/20 backdrop-blur-[2px] cursor-pointer"
+                           className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/20 backdrop-blur-[2px] cursor-pointer"
                           onClick={() => setIsMapLocked(false)}
                         >
                           <div className={`border px-6 py-3 rounded-full flex items-center gap-3 animate-pulse shadow-lg ${
@@ -399,7 +401,7 @@ export function HeroSection() {
                             <svg className={`w-5 h-5 ${isNight ? 'text-brand-yellow' : 'text-brand-dark'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                             </svg>
-                            <span className="font-bold text-sm tracking-widest uppercase">Tap to Explore Map</span>
+                            <span className="font-bold text-sm tracking-widest uppercase">{t.hero.tapToExplore}</span>
                           </div>
                         </div>
                       )}
@@ -413,7 +415,7 @@ export function HeroSection() {
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-white hover:bg-brand-yellow hover:border-brand-yellow hover:text-brand-dark' 
                               : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-brand-dark hover:text-brand-light hover:border-brand-dark'
                           }`} 
-                          aria-label="Zoom In"
+                          aria-label={t.hero.zoomIn}
                         >
                           <svg className="w-5 h-5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -426,7 +428,7 @@ export function HeroSection() {
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-white hover:bg-brand-yellow hover:border-brand-yellow hover:text-brand-dark' 
                               : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-brand-dark hover:text-brand-light hover:border-brand-dark'
                           }`} 
-                          aria-label="Zoom Out"
+                          aria-label={t.hero.zoomOut}
                         >
                           <svg className="w-5 h-5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -442,7 +444,7 @@ export function HeroSection() {
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-brand-yellow hover:bg-red-500 hover:border-red-500 hover:text-white' 
                               : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-red-500 hover:border-red-500 hover:text-white'
                           }`} 
-                          aria-label="Lock Map"
+                          aria-label={t.hero.lockMap}
                         >
                           <svg className="w-5 h-5 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
@@ -466,12 +468,12 @@ export function HeroSection() {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                   </svg>
-                  <span className="font-bold text-[10px] tracking-wider uppercase">Interactive Map</span>
+                  <span className="font-bold text-[10px] tracking-wider uppercase">{t.hero.interactiveMap}</span>
                 </div>
                 <p className={`text-[10px] leading-relaxed transition-colors duration-700 ${
                   isNight ? 'text-brand-gray' : 'text-brand-dark/70'
                 }`}>
-                  Use the map controls or pinch with two fingers to zoom in and explore the details of our digital headquarters.
+                  {t.hero.mapTip}
                 </p>
               </div>
             </div>

@@ -1,38 +1,13 @@
 import { useRef, useEffect, useState } from 'react';
 import { gsap } from '../../../animations/gsap';
-
-const journalCategories = ['ALL', 'DESIGN', 'BUILD', 'GROW', 'EXPERIMENT'];
-
-const articles = [
-  {
-    title: 'Why we killed our first idea',
-    category: 'Design',
-    readTime: '8 min read',
-    image: 'bg-brand-surface-light'
-  },
-  {
-    title: 'The power of good constraints',
-    category: 'Build',
-    readTime: '6 min read',
-    image: 'bg-brand-surface-light'
-  },
-  {
-    title: 'SEO is not a tactic, it\'s a mindset',
-    category: 'Grow',
-    readTime: '9 min read',
-    image: 'bg-brand-surface-light'
-  },
-  {
-    title: 'What we learned from building a game',
-    category: 'Experiment',
-    readTime: '7 min read',
-    image: 'bg-brand-surface-light'
-  }
-];
+import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
 
 export function JournalSection() {
   const containerRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const { currentLang } = useGlobalStore();
+  const t = useTranslation()(currentLang);
   const [activeCategory, setActiveCategory] = useState('ALL');
 
   useEffect(() => {
@@ -53,21 +28,21 @@ export function JournalSection() {
         {/* Header */}
         <div className="md:w-1/3 flex flex-col items-start">
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">07 / 08</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">Journal</span>
+            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.journal.step}</span>
+            <span className="text-xs font-semibold tracking-widest uppercase">{t.journal.badge}</span>
           </div>
           
           <h2 className="text-5xl font-bold leading-tight mb-6">
-            Field Notes
+            {t.journal.title}
           </h2>
           
           <p className="text-brand-gray text-sm leading-relaxed mb-12">
-            Ideas, lessons and experiments from our journey.
+            {t.journal.description}
           </p>
 
           <a href="/journal" className="text-xs font-bold uppercase tracking-widest text-brand-yellow hover:text-brand-light transition-colors flex items-center gap-2 mt-auto">
-            View All Articles
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            {t.journal.viewAll}
+            <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
@@ -77,27 +52,27 @@ export function JournalSection() {
         <div className="md:w-2/3 flex flex-col">
           {/* Filters */}
           <div className="flex flex-wrap gap-2 mb-12">
-            {journalCategories.map((cat) => (
+            {t.journal.categories.map((cat) => (
               <button 
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
+                key={cat.key}
+                onClick={() => setActiveCategory(cat.key)}
                 className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors border ${
-                  activeCategory === cat 
+                  activeCategory === cat.key 
                     ? 'bg-brand-yellow text-brand-dark border-brand-yellow' 
                     : 'bg-transparent text-brand-gray border-brand-surface-light hover:border-brand-gray'
                 }`}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
 
           {/* Articles */}
           <div ref={listRef} className="flex flex-col gap-8 md:gap-10">
-            {articles.map((article, i) => (
+            {t.journal.articles.map((article, i) => (
               <a key={i} href="#" className="group flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 p-4 md:p-6 -mx-4 md:-mx-6 rounded-xl hover:bg-brand-surface transition-colors cursor-pointer border border-transparent hover:border-brand-surface-light">
                 {/* Thumbnail */}
-                <div className={`w-full md:w-48 h-48 md:h-32 rounded-xl ${article.image} shrink-0 border border-brand-surface-light overflow-hidden flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity`}>
+                <div className={`w-full md:w-48 h-48 md:h-32 rounded-xl bg-brand-surface-light shrink-0 border border-brand-surface-light overflow-hidden flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity`}>
                    <div className="w-8 h-8 border border-brand-gray/30 rounded rotate-12"></div>
                 </div>
                 

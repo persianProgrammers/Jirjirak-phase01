@@ -70,7 +70,7 @@ export function VintageJazzCapsule() {
   const shouldRender = isVisible || isHovered;
 
   return (
-    <div className="fixed bottom-4 left-3 sm:bottom-6 sm:left-4 lg:bottom-10 lg:left-8 z-[60] pointer-events-none">
+    <div className="fixed bottom-4 left-3 sm:bottom-6 sm:left-4 lg:bottom-10 lg:left-8 rtl:left-auto rtl:right-3 rtl:sm:right-4 rtl:lg:right-8 z-[60] pointer-events-none">
       <AnimatePresence mode="wait">
         {shouldRender && (
           <motion.div

@@ -1,16 +1,14 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from '../../../animations/gsap';
-
-const teamMembers = [
-  { name: 'Abdollah', role: 'Architect / Builder', type: 'System Thinker', highlight: true },
-  { name: 'Sara', role: 'Designer', type: 'Visual Thinker', highlight: false },
-  { name: 'Nima', role: 'Developer', type: 'Problem Solver', highlight: false }
-];
+import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
 
 export function AboutSection() {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const { currentLang } = useGlobalStore();
+  const t = useTranslation()(currentLang);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -36,38 +34,38 @@ export function AboutSection() {
         {/* Left Column (Text) */}
         <div ref={textRef} className="lg:col-span-4 flex flex-col items-start justify-center">
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">05 / 08</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">About</span>
+            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.about.step}</span>
+            <span className="text-xs font-semibold tracking-widest uppercase">{t.about.badge}</span>
           </div>
           
           <h2 className="text-5xl font-bold leading-tight mb-8">
-            We are small.<br />On purpose.
+            {t.about.titleLine1}<br />{t.about.titleLine2}
           </h2>
           
           <p className="text-brand-gray text-sm leading-relaxed mb-12">
-            Jirjirak is a creative studio, built by a small team of passionate people. We believe in quality over quantity, depth over speed, and ideas that actually matter.
+            {t.about.description}
           </p>
           
           <a href="#about" className="text-xs font-bold uppercase tracking-widest text-brand-dark border-b-2 border-brand-dark pb-1 hover:text-brand-gray hover:border-brand-gray transition-colors flex items-center gap-2 mb-16">
-            Meet the team
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            {t.about.meetTeam}
+            <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
           
-          <p className="text-[10px] text-brand-gray uppercase tracking-widest font-semibold mt-auto">Small team. Big impact.</p>
+          <p className="text-[10px] text-brand-gray uppercase tracking-widest font-semibold mt-auto">{t.about.tagline}</p>
         </div>
 
         {/* Right Column (Image + Cards) */}
         <div className="lg:col-span-8 relative min-h-[600px] rounded-xl overflow-hidden shadow-2xl bg-brand-dark">
           {/* Background Image Placeholder (Environment) */}
           <div className="absolute inset-0 bg-brand-surface-light opacity-50 flex items-center justify-center">
-            <span className="text-brand-light/70 text-xs tracking-widest uppercase">Studio Environment Shot</span>
+            <span className="text-brand-light/70 text-xs tracking-widest uppercase">{t.about.environmentShot}</span>
           </div>
           
           {/* Team Cards Container */}
           <div ref={cardsRef} className="absolute bottom-8 left-8 right-8 flex flex-wrap gap-4 z-10">
-            {teamMembers.map((member, i) => (
+            {t.about.teamMembers.map((member, i) => (
               <div 
                 key={i} 
                 className={`flex-1 min-w-[200px] p-6 rounded-lg border cursor-pointer transition-transform duration-300 hover:-translate-y-2 flex flex-col justify-between h-[200px] ${
@@ -83,7 +81,7 @@ export function AboutSection() {
                 </div>
                 
                 <div className={`self-end ${member.highlight ? 'text-brand-dark' : 'text-brand-gray'}`}>
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
                 </div>
