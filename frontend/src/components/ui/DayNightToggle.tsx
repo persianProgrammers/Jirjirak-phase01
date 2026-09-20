@@ -7,23 +7,26 @@ import { useGlobalStore } from '../../stores/globalStore';
  * Crafted with delicate brass mechanics matching the Gramophone & Vintage Keycap buttons.
  */
 export function DayNightToggle() {
-  const { isNight, toggleNight } = useGlobalStore();
+  const { isNight, iconNightPreview, toggleNight } = useGlobalStore();
+
+  // Use iconNightPreview so the astrolabe gear and sun/moon flip animation triggers IMMEDIATELY on click,
+  // letting the user see the mechanical transformation finish BEFORE the curtain covers the page
+  const displayNight = iconNightPreview ?? isNight;
 
   const activeGold = "#FFF083";
   const warmSun = "#FFD700";
-  const mutedColor = "rgba(255,255,255,0.3)";
 
   return (
     <button
       onClick={toggleNight}
       className="relative w-10 h-10 lg:w-[50px] lg:h-[50px] flex items-center justify-center cursor-pointer group pointer-events-auto bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 hover:border-brand-yellow/40 transition-all duration-500 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden shrink-0"
-      aria-label={isNight ? "Switch to Day Mode" : "Switch to Night Mode"}
+      aria-label={displayNight ? "Switch to Day Mode" : "Switch to Night Mode"}
     >
       {/* Ambient Celestial Glow */}
       <div 
         className="absolute inset-0 rounded-full transition-all duration-1000 pointer-events-none" 
         style={{ 
-          background: isNight 
+          background: displayNight 
             ? 'radial-gradient(circle at center, rgba(255,240,131,0.14) 0%, transparent 70%)' 
             : 'radial-gradient(circle at center, rgba(255,215,0,0.2) 0%, transparent 70%)' 
         }} 
@@ -36,7 +39,7 @@ export function DayNightToggle() {
           {/* 1. Outer Astronomical Degree Gear (Spins with ratchet spring on toggle) */}
           <motion.g
             initial={false}
-            animate={{ rotate: isNight ? 0 : 180 }}
+            animate={{ rotate: displayNight ? 0 : 180 }}
             transition={{ type: "spring", stiffness: 90, damping: 14 }}
             style={{ transformOrigin: "24px 24px" }}
           >
@@ -45,7 +48,7 @@ export function DayNightToggle() {
               cx="24" 
               cy="24" 
               r="21" 
-              stroke={isNight ? activeGold : warmSun} 
+              stroke={displayNight ? activeGold : warmSun} 
               strokeWidth="1.1" 
               strokeDasharray="4 4" 
               opacity="0.35" 
@@ -62,14 +65,14 @@ export function DayNightToggle() {
             />
 
             {/* 4 Cardinal Astrolabe Pins */}
-            <circle cx="24" cy="4.5" r="0.8" fill={isNight ? activeGold : warmSun} opacity="0.6" />
-            <circle cx="43.5" cy="24" r="0.8" fill={isNight ? activeGold : warmSun} opacity="0.6" />
-            <circle cx="24" cy="43.5" r="0.8" fill={isNight ? activeGold : warmSun} opacity="0.6" />
-            <circle cx="4.5" cy="24" r="0.8" fill={isNight ? activeGold : warmSun} opacity="0.6" />
+            <circle cx="24" cy="4.5" r="0.8" fill={displayNight ? activeGold : warmSun} opacity="0.6" />
+            <circle cx="43.5" cy="24" r="0.8" fill={displayNight ? activeGold : warmSun} opacity="0.6" />
+            <circle cx="24" cy="43.5" r="0.8" fill={displayNight ? activeGold : warmSun} opacity="0.6" />
+            <circle cx="4.5" cy="24" r="0.8" fill={displayNight ? activeGold : warmSun} opacity="0.6" />
           </motion.g>
 
           {/* 2. Orbiting Floating Particles (Night Fireflies / Day Solar Motes) */}
-          {isNight ? (
+          {displayNight ? (
             <g>
               {/* Wandering Night Firefly Particle 1 */}
               <motion.circle
@@ -132,7 +135,7 @@ export function DayNightToggle() {
           {/* 3. Central Celestial Shifting Orrery (3D Coin/Astronomical Flip) */}
           <motion.g
             initial={false}
-            animate={{ rotateY: isNight ? 0 : 180 }}
+            animate={{ rotateY: displayNight ? 0 : 180 }}
             transition={{ type: "spring", stiffness: 100, damping: 17 }}
             style={{ transformOrigin: "24px 24px", transformStyle: "preserve-3d" }}
           >

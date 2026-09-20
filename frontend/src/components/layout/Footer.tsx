@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useGlobalStore } from '../../stores/globalStore';
 import { useTranslation } from '../../i18n/translations';
+import { AnimatedJirjirakLogo } from '../ui/AnimatedJirjirakLogo';
 
 export function Footer() {
   const { currentLang } = useGlobalStore();
@@ -9,8 +10,8 @@ export function Footer() {
   return (
     <footer className="bg-brand-light text-brand-dark px-8 lg:px-12 xl:px-16 py-12 border-t border-gray-200">
       <div className="max-w-[1600px] mx-auto w-full flex flex-col md:flex-row justify-between items-center text-xs font-medium uppercase tracking-wider gap-6 md:gap-4">
-        <Link to="/" className="flex items-center">
-          <img src="/assets/logos/logo-footer.svg" alt="Jirjirak Studio" className="h-8 md:h-10 w-auto" />
+        <Link to="/" className="flex items-center group">
+          <AnimatedJirjirakLogo variant="footer" className="h-8 md:h-10 w-auto" />
         </Link>
         
         <nav className="flex flex-wrap justify-center gap-6">

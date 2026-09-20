@@ -31,7 +31,7 @@ export function CaseStudySection() {
   }, []);
 
   return (
-    <section ref={containerRef} className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-dark text-brand-light overflow-hidden">
+    <section id="case-study" ref={containerRef} data-cursor="project" className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-dark text-brand-light overflow-hidden">
       <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-16 relative">
         
         {/* Left Column (Info & Steps) */}

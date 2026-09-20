@@ -1,40 +1,31 @@
 /**
- * Ambient Sound Service for Jirjirak
- * - Night Mode: Authentic relaxing jazz ballad
- * - Day Mode: Authentic gentle open-space office ambience
+ * Ambient Audio Service for Jirjirak
+ * پخش موزیک اختصاصی جیرجیرک (jirjirak-music.mp3) برای وب‌سایت در هر دو حالت روز و شب
  */
 
 class AmbientAudioService {
   private audioElement: HTMLAudioElement | null = null;
-  private currentMode: 'night' | 'day' = 'night';
   private isCurrentlyPlaying = false;
   private fadeInterval: number | null = null;
   private targetVolume = 0.55;
 
-  private readonly TRACKS = {
-    night: '/assets/audio/jazz_night.mp3',
-    day: '/assets/audio/office_day.mp3',
-  };
+  private readonly MUSIC_TRACK = '/assets/audio/jirjirak-music.mp3';
 
   private getAudio(): HTMLAudioElement {
     if (!this.audioElement) {
       this.audioElement = new Audio();
       this.audioElement.loop = true;
       this.audioElement.preload = 'auto';
+      this.audioElement.src = this.MUSIC_TRACK;
     }
     return this.audioElement;
   }
 
-  public play(isNight: boolean) {
-    const nextMode = isNight ? 'night' : 'day';
+  public play(_isNight?: boolean) {
     const audio = this.getAudio();
 
-    if (this.currentMode !== nextMode || !this.isCurrentlyPlaying || !audio.src) {
-      this.currentMode = nextMode;
-      const targetSrc = this.TRACKS[nextMode];
-      
-      // Update source
-      audio.src = targetSrc;
+    if (!audio.src || !audio.src.includes('jirjirak-music.mp3')) {
+      audio.src = this.MUSIC_TRACK;
       audio.currentTime = 0;
     }
 
@@ -65,25 +56,8 @@ class AmbientAudioService {
     });
   }
 
-  public setNightMode(isNight: boolean) {
-    const newMode = isNight ? 'night' : 'day';
-    if (this.currentMode === newMode) return;
-    this.currentMode = newMode;
-
-    // If currently playing, smoothly crossfade to the other track
-    if (this.isCurrentlyPlaying && this.audioElement) {
-      const audio = this.audioElement;
-      this.fadeOut(audio, () => {
-        if (!this.isCurrentlyPlaying) return;
-        audio.src = this.TRACKS[newMode];
-        audio.currentTime = 0;
-        audio.play().then(() => {
-          this.fadeIn(audio, this.targetVolume);
-        }).catch((err) => {
-          console.warn('[AmbientAudio] Mode switch play error:', err);
-        });
-      });
-    }
+  public setNightMode(_isNight: boolean) {
+    // طبق خواسته کاربر: همان موزیک واحد در روز و شب بدون قطع شدن ادامه پیدا می‌کند
   }
 
   private fadeIn(audio: HTMLAudioElement, targetVol: number) {
@@ -115,3 +89,4 @@ class AmbientAudioService {
 }
 
 export const ambientAudio = new AmbientAudioService();
+

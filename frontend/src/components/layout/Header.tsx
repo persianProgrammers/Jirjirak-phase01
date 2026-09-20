@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useGlobalStore } from '../../stores/globalStore';
 import { useTranslation } from '../../i18n/translations';
+import { AnimatedJirjirakLogo } from '../ui/AnimatedJirjirakLogo';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,10 +37,10 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-[60] px-8 lg:px-12 xl:px-16 py-6 pointer-events-none mix-blend-difference text-white">
-        <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between pointer-events-auto">
-          <Link to="/" className="flex items-center" onClick={closeMenu}>
-            <img src="/assets/logos/logo-header.svg" alt="Jirjirak Studio" className="h-10 md:h-12 w-auto" />
+      <header className="fixed top-0 left-0 w-full z-[60] px-8 lg:px-12 xl:px-16 py-6 pointer-events-none text-white [transform:translateZ(0)] will-change-transform">
+        <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between pointer-events-auto mix-blend-difference">
+          <Link to="/" className="flex items-center group" onClick={closeMenu}>
+            <AnimatedJirjirakLogo variant="header" className="h-10 md:h-12 w-auto" />
           </Link>
           
           <nav className="hidden md:flex items-center gap-8 text-xs font-medium tracking-wide uppercase">
@@ -59,9 +60,10 @@ export function Header() {
 
           {/* Mobile Hamburger Button */}
           <button 
-            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[70] relative"
+            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[70] relative cursor-pointer group"
             onClick={toggleMenu}
             aria-label={isMenuOpen ? t.nav.close : t.nav.menu}
+            data-cursor="pointer"
           >
             <motion.span 
               animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}

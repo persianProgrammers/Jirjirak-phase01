@@ -25,10 +25,12 @@ export interface ServicesTranslation {
   exploreAll: string;
   items: Array<{
     title: string;
+    department?: string;
     items: string[];
   }>;
   services: Array<{
     title: string;
+    department?: string;
     items: string[];
   }>;
 }
@@ -240,7 +242,7 @@ const enWorld: WorldTranslation = {
   titleLine2: 'the Jirjirak World',
   description: 'Step inside our creative space. Discover the departments, meet the team, and see how ideas turn into real things.',
   desc: 'Step inside our creative space. Discover the departments, meet the team, and see how ideas turn into real things.',
-  enterWorld: 'Enter World',
+  enterWorld: 'Explore',
   canvasPlaceholder: 'Jirjirak 2D World Module (Interactive Canvas)',
 };
 
@@ -253,41 +255,41 @@ const enServices: ServicesTranslation = {
   titleLine2: 'what matters.',
   description: 'From strategy to execution, we create modern digital presence to reach, communicate and make an impact.',
   desc: 'From strategy to execution, we create modern digital presence to reach, communicate and make an impact.',
-  exploreAll: 'Explore All Services',
+  exploreAll: 'ALL SERVICES',
   items: [
     {
-      title: 'Build',
-      items: ['Websites', 'Digital Products', 'Interactive Experiences'],
+      title: 'Web & Development',
+      items: ['Websites & Web Apps', 'Digital Products & UI/UX', 'Architecture & Performance'],
     },
     {
-      title: 'Grow',
-      items: ['SEO', 'Digital Marketing', 'Performance'],
+      title: 'Growth & Analytics',
+      items: ['SEO & Organic Strategy', 'Data Analytics & Insights', 'Digital Marketing & Growth'],
     },
     {
-      title: 'Define',
-      items: ['Branding', 'Visual Identity', 'Strategy'],
+      title: 'Branding & Creative',
+      items: ['Brand Strategy & Naming', 'Visual Identity & Design', 'Motion & Creative Studio'],
     },
     {
-      title: 'Play',
-      items: ['Games', 'Animation', 'Experimental Work'],
+      title: 'Game & Interactive',
+      items: ['Game Design & Logic', 'Interactive 3D Experiences', 'Academy & Learning Hub'],
     },
   ],
   services: [
     {
-      title: 'Build',
-      items: ['Websites', 'Digital Products', 'Interactive Experiences'],
+      title: 'Web & Development',
+      items: ['Websites & Web Apps', 'Digital Products & UI/UX', 'Architecture & Performance'],
     },
     {
-      title: 'Grow',
-      items: ['SEO', 'Digital Marketing', 'Performance'],
+      title: 'Growth & Analytics',
+      items: ['SEO & Organic Strategy', 'Data Analytics & Insights', 'Digital Marketing & Growth'],
     },
     {
-      title: 'Define',
-      items: ['Branding', 'Visual Identity', 'Strategy'],
+      title: 'Branding & Creative',
+      items: ['Brand Strategy & Naming', 'Visual Identity & Design', 'Motion & Creative Studio'],
     },
     {
-      title: 'Play',
-      items: ['Games', 'Animation', 'Experimental Work'],
+      title: 'Game & Interactive',
+      items: ['Game Design & Logic', 'Interactive 3D Experiences', 'Academy & Learning Hub'],
     },
   ],
 };
@@ -408,7 +410,7 @@ const faWorld: WorldTranslation = {
   titleLine2: 'دنیای جیرجیرک',
   description: 'قدم به فضای خلاق ما بگذارید. بخش‌های مختلف را کشف کنید، با تیم آشنا شوید و ببینید چگونه ایده‌ها به واقعیت تبدیل می‌شوند.',
   desc: 'قدم به فضای خلاق ما بگذارید. بخش‌های مختلف را کشف کنید، با تیم آشنا شوید و ببینید چگونه ایده‌ها به واقعیت تبدیل می‌شوند.',
-  enterWorld: 'ورود به جهان',
+  enterWorld: 'کاوش',
   canvasPlaceholder: 'ماژول جهان تعاملی جیرجیرک',
 };
 
@@ -421,41 +423,41 @@ const faServices: ServicesTranslation = {
   titleLine2: 'را می‌سازیم.',
   description: 'از استراتژی تا اجرا، ما حضور دیجیتال معناداری خلق می‌کنیم تا به مخاطب برسید، ارتباطی ماندگار بسازید و اثربخش باشید.',
   desc: 'از استراتژی تا اجرا، ما حضور دیجیتال معناداری خلق می‌کنیم تا به مخاطب برسید، ارتباطی ماندگار بسازید و اثربخش باشید.',
-  exploreAll: 'مشاهده تمام خدمات',
+  exploreAll: 'مشاهده همه خدمات',
   items: [
     {
-      title: 'ساخت و توسعه',
-      items: ['وب‌سایت‌های پیشرفته', 'محصولات دیجیتال', 'تجربه‌های تعاملی'],
+      title: 'وب و توسعه',
+      items: ['وب‌سایت‌ها و وب‌اپلیکیشن‌ها', 'محصولات دیجیتال و رابط کاربری', 'معماری کد و عملکرد پایدار'],
     },
     {
-      title: 'رشد و دیده‌شدن',
-      items: ['سئو و بهینه‌سازی', 'بازاریابی دیجیتال', 'سرعت و کارایی بالا'],
+      title: 'رشد و تحلیل داده',
+      items: ['سئو و استراتژی رشد ارگانیک', 'تحلیل داده و شاخص‌های کلیدی', 'دیجیتال مارکتینگ و کمپین‌ها'],
     },
     {
-      title: 'تعریف و هویت',
-      items: ['برندسازی جامع', 'هویت بصری یکپارچه', 'استراتژی دیجیتال'],
+      title: 'برندینگ و استودیو خلاق',
+      items: ['استراتژی برند و نام‌گذاری', 'هویت بصری و زبان دیزاین', 'موشن‌گرافیک و انیمیشن'],
     },
     {
-      title: 'سرگرمی و بازی',
-      items: ['بازی‌های مستقل', 'انیمیشن و پویانمایی', 'پروژه‌های تجربی'],
+      title: 'بازی‌سازی و تعاملی',
+      items: ['طراحی و ساخت بازی‌های دیجیتال', 'تجربه‌های تعاملی و سه‌بعدی', 'آکادمی و کارگاه‌های توسعه مهارت'],
     },
   ],
   services: [
     {
-      title: 'ساخت و توسعه',
-      items: ['وب‌سایت‌های پیشرفته', 'محصولات دیجیتال', 'تجربه‌های تعاملی'],
+      title: 'وب و توسعه',
+      items: ['وب‌سایت‌ها و وب‌اپلیکیشن‌ها', 'محصولات دیجیتال و رابط کاربری', 'معماری کد و عملکرد پایدار'],
     },
     {
-      title: 'رشد و دیده‌شدن',
-      items: ['سئو و بهینه‌سازی', 'بازاریابی دیجیتال', 'سرعت و کارایی بالا'],
+      title: 'رشد و تحلیل داده',
+      items: ['سئو و استراتژی رشد ارگانیک', 'تحلیل داده و شاخص‌های کلیدی', 'دیجیتال مارکتینگ و کمپین‌ها'],
     },
     {
-      title: 'تعریف و هویت',
-      items: ['برندسازی جامع', 'هویت بصری یکپارچه', 'استراتژی دیجیتال'],
+      title: 'برندینگ و استودیو خلاق',
+      items: ['استراتژی برند و نام‌گذاری', 'هویت بصری و زبان دیزاین', 'موشن‌گرافیک و انیمیشن'],
     },
     {
-      title: 'سرگرمی و بازی',
-      items: ['بازی‌های مستقل', 'انیمیشن و پویانمایی', 'پروژه‌های تجربی'],
+      title: 'بازی‌سازی و تعاملی',
+      items: ['طراحی و ساخت بازی‌های دیجیتال', 'تجربه‌های تعاملی و سه‌بعدی', 'آکادمی و کارگاه‌های توسعه مهارت'],
     },
   ],
 };
@@ -576,7 +578,7 @@ export const translations: Record<Language, TranslationSchema> = {
       about: 'About',
       journal: 'Journal',
       contact: 'Contact',
-      enterWorld: 'Enter World',
+      enterWorld: 'Explore',
       menu: 'Menu',
       close: 'Close',
     },
@@ -701,7 +703,7 @@ export const translations: Record<Language, TranslationSchema> = {
       about: 'درباره ما',
       journal: 'یادداشت‌ها',
       contact: 'تماس',
-      enterWorld: 'ورود به جهان',
+      enterWorld: 'کاوش',
       menu: 'منو',
       close: 'بستن',
     },

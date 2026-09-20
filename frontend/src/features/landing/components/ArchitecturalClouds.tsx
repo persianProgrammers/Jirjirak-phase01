@@ -33,6 +33,9 @@ export const ArchitecturalClouds: React.FC = () => {
   const cloudsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    let isVisible = true;
+    const activeTweens: gsap.core.Tween[] = [];
+
     const ctx = gsap.context(() => {
       const isMobile = window.innerWidth < 768;
 
@@ -45,10 +48,6 @@ export const ArchitecturalClouds: React.FC = () => {
         const baseOpacity = 0.55 + (i % 2) * 0.15;
 
         // Well-spaced layout across screen width & top sky section:
-        // On mobile: 2 clouds staggered nicely
-        // Cloud 0: left side / top ~28px
-        // Cloud 1: right-middle / top ~80px (well separated)
-        // On desktop: 4 clouds distributed across width
         const totalClouds = cloudCount;
         const screenW = window.innerWidth;
         const segmentW = screenW / totalClouds;
@@ -71,11 +70,12 @@ export const ArchitecturalClouds: React.FC = () => {
         const maxDuration = isMobile ? 48 : 54;
 
         const drift = () => {
+          if (!isVisible) return;
           const deltaX = gsap.utils.random(260, 420);
           const deltaY = gsap.utils.random(-8, 10);
           const duration = gsap.utils.random(minDuration, maxDuration);
 
-          gsap.to(cloud, {
+          const tw = gsap.to(cloud, {
             x: `+=${deltaX}`,
             y: `+=${deltaY}`,
             duration,
@@ -97,13 +97,34 @@ export const ArchitecturalClouds: React.FC = () => {
               drift();
             },
           });
+          activeTweens.push(tw);
         };
 
         drift();
       });
     }, containerRef);
 
-    return () => ctx.revert();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (!isVisible) {
+          activeTweens.forEach((t) => t.pause());
+        } else {
+          activeTweens.forEach((t) => t.resume());
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      activeTweens.forEach((t) => t.kill());
+      ctx.revert();
+    };
   }, [cloudCount]);
 
   return (

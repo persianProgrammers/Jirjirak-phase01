@@ -13,7 +13,6 @@ export function CinemaToggle() {
       onClick={() => setIsCinematic(!isCinematic)}
       className="relative flex items-center justify-end cursor-pointer group pointer-events-auto bg-[#0A0A0A]/80 backdrop-blur-md border border-white/10 hover:border-brand-yellow/40 transition-all duration-500 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] overflow-hidden shrink-0"
       aria-label={isCinematic ? "Exit Cinema Mode" : "Enter Cinema Mode"}
-      title={isCinematic ? "Cinema Mode Active" : "Cinema Mode Off"}
     >
       {/* Ambient Background Glow when active */}
       <div 

@@ -2,8 +2,13 @@ import { motion } from 'motion/react';
 import { useGlobalStore } from '../../stores/globalStore';
 
 export function LanguageToggle() {
-  const { currentLang, toggleLang } = useGlobalStore();
-  const isFa = currentLang === 'FA';
+  const { currentLang, iconLangPreview, toggleLang } = useGlobalStore();
+  
+  // Use iconLangPreview so the typewriter keycap 180-deg flip and mechanical gear spin
+  // occur immediately upon user click, allowing the user to watch the full animation finish
+  // before the curtain covers the screen and flips the page layout/text
+  const displayLang = iconLangPreview ?? currentLang;
+  const isFa = displayLang === 'FA';
 
   const activeColor = "#FFF083";
 

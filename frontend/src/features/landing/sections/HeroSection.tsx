@@ -14,8 +14,8 @@ export function HeroSection() {
   const { isNight, currentLang } = useGlobalStore();
   const t = useTranslation()(currentLang);
 
-  // Night Mode: Fireflies
-  const firefliesCount = 42;
+  // Night Mode: Fireflies (Optimized count for 120fps smooth scrolling)
+  const firefliesCount = 18;
   const fireflies = useMemo(() => Array.from({ length: firefliesCount }), []);
   const firefliesRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -33,6 +33,29 @@ export function HeroSection() {
      // - Golden Elm (url(#birchGrad))
      ========================================================================= */
 
+  const [isDayImageLoaded, setIsDayImageLoaded] = useState(false);
+  const [isNightImageLoaded, setIsNightImageLoaded] = useState(false);
+
+  useEffect(() => {
+    const dayImg = new Image();
+    dayImg.src = '/assets/images/ui/hero-building-day.png';
+    if (dayImg.complete && dayImg.naturalWidth > 0) {
+      setIsDayImageLoaded(true);
+    } else {
+      dayImg.onload = () => setIsDayImageLoaded(true);
+      dayImg.onerror = () => setIsDayImageLoaded(true);
+    }
+
+    const nightImg = new Image();
+    nightImg.src = '/assets/images/ui/hero-building-night.png';
+    if (nightImg.complete && nightImg.naturalWidth > 0) {
+      setIsNightImageLoaded(true);
+    } else {
+      nightImg.onload = () => setIsNightImageLoaded(true);
+      nightImg.onerror = () => setIsNightImageLoaded(true);
+    }
+  }, []);
+
   // Initial text entrance
   useEffect(() => {
     if (!textRef.current) return;
@@ -46,8 +69,11 @@ export function HeroSection() {
     return () => ctx.revert();
   }, []);
 
-  // Mode-dependent ambient particle animation (cleanly switches on isNight change)
+  // Mode-dependent ambient particle animation (paused when offscreen to save 100% GPU/CPU during scroll)
   useEffect(() => {
+    let isVisible = true;
+    const activeTweens: gsap.core.Tween[] = [];
+
     const ctx = gsap.context(() => {
       if (isNight) {
         // Night: Fireflies wandering in the darkness
@@ -61,7 +87,8 @@ export function HeroSection() {
           });
 
           const animateFly = () => {
-            gsap.to(fly, {
+            if (!isVisible) return;
+            const tw = gsap.to(fly, {
               x: `+=${gsap.utils.random(-100, 100)}`,
               y: `+=${gsap.utils.random(-100, 100)}`,
               opacity: () => gsap.utils.random(0.15, 0.85),
@@ -69,46 +96,35 @@ export function HeroSection() {
               ease: "sine.inOut",
               onComplete: animateFly
             });
+            activeTweens.push(tw);
           };
           animateFly();
         });
       }
-
-      /* =========================================================================
-         [RESERVED FOR FUTURE SEASONAL FEATURE - LEAVES & PETALS ANIMATION CODE]
-           leavesRef.current.forEach((leaf) => {
-             if (!leaf) return;
-             gsap.set(leaf, {
-               x: () => gsap.utils.random(-20, window.innerWidth + 20),
-               y: () => gsap.utils.random(-60, window.innerHeight),
-               rotation: () => gsap.utils.random(-180, 180),
-               rotationX: () => gsap.utils.random(-35, 35),
-               rotationY: () => gsap.utils.random(-35, 35),
-               scale: () => gsap.utils.random(0.85, 1.25),
-               opacity: () => gsap.utils.random(0.85, 1.0)
-             });
-             const driftLeaf = () => {
-               gsap.to(leaf, {
-                 x: `+=${gsap.utils.random(-120, -260)}`,
-                 y: `+=${gsap.utils.random(150, 300)}`,
-                 rotation: `+=${gsap.utils.random(-60, 60)}`,
-                 duration: () => gsap.utils.random(7, 13),
-                 ease: "sine.inOut",
-                 onComplete: () => {
-                   const curY = gsap.getProperty(leaf, "y") as number;
-                   if (curY > window.innerHeight + 60) {
-                     gsap.set(leaf, { x: gsap.utils.random(window.innerWidth * 0.2, window.innerWidth + 50), y: -60 });
-                   }
-                   driftLeaf();
-                 }
-               });
-             };
-             driftLeaf();
-           });
-           ========================================================================= */
     }, containerRef);
 
-    return () => ctx.revert();
+    // Observer: Pause when hero is out of view (e.g. user scrolled down)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (!isVisible) {
+          activeTweens.forEach((t) => t.pause());
+        } else {
+          activeTweens.forEach((t) => t.resume());
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      activeTweens.forEach((t) => t.kill());
+      ctx.revert();
+    };
   }, [isNight]);
 
   return (
@@ -118,22 +134,16 @@ export function HeroSection() {
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
       }`}
     >
-      {/* SVG Definitions reserved for Future Seasonal Feature */}
-      {/* 
-        <svg width="0" height="0" className="absolute pointer-events-none">
-          <defs>
-            <linearGradient id="ginkgoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#F59E0B" /><stop offset="60%" stopColor="#D97706" /><stop offset="100%" stopColor="#B45309" /></linearGradient>
-            <linearGradient id="mapleGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#FB923C" /><stop offset="50%" stopColor="#EA580C" /><stop offset="100%" stopColor="#9A3412" /></linearGradient>
-            <linearGradient id="birchGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#FCD34D" /><stop offset="50%" stopColor="#F59E0B" /><stop offset="100%" stopColor="#B45309" /></linearGradient>
-          </defs>
-        </svg>
-      */}
-
-      {/* Abstract Background Ambient Glow (Night Mode Only) */}
+      {/* Abstract Background Ambient Glow (Night Mode Only - 0ms blur raster cost) */}
       <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ${
         isNight ? 'opacity-15' : 'opacity-0'
       }`}>
-        <div className="absolute top-1/4 -right-1/4 w-[650px] h-[650px] rounded-full filter blur-[130px] bg-brand-yellow/25 mix-blend-screen"></div>
+        <div 
+          className="absolute top-1/4 -right-1/4 w-[650px] h-[650px] rounded-full pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, rgba(255,240,131,0.22) 0%, rgba(255,240,131,0.04) 45%, transparent 70%)'
+          }}
+        />
       </div>
 
       {/* Fireflies Background (Night Mode ONLY - completely unmounted in Day) */}
@@ -143,7 +153,8 @@ export function HeroSection() {
             <div
               key={`firefly-${i}`}
               ref={(el) => { firefliesRef.current[i] = el; }}
-              className="absolute top-0 left-0 w-1.5 h-1.5 bg-brand-yellow rounded-full shadow-[0_0_12px_2px_rgba(255,240,131,0.6)]"
+              className="absolute top-0 left-0 w-1.5 h-1.5 bg-brand-yellow rounded-full shadow-[0_0_8px_rgba(255,240,131,0.7)] will-change-transform"
+              style={{ transform: 'translateZ(0)' }}
             ></div>
           ))}
         </div>
@@ -261,8 +272,10 @@ export function HeroSection() {
               <img 
                 src="/assets/images/ui/hero-building-day.png" 
                 alt="Jirjirak Isometric Studio (Day)" 
-                className={`w-auto h-auto lg:max-h-[85vh] object-contain origin-center relative z-10 select-none transition-opacity duration-700 ease-in-out ${
+                className={`w-auto h-auto lg:max-h-[85vh] object-contain origin-center relative z-10 select-none transition-all duration-700 ease-in-out ${
                   !isNight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                } ${
+                  isDayImageLoaded ? 'blur-0 scale-100' : 'blur-xl scale-[1.02]'
                 }`} 
               />
 
@@ -270,8 +283,10 @@ export function HeroSection() {
               <img 
                 src="/assets/images/ui/hero-building-night.png" 
                 alt="Jirjirak Isometric Studio (Night)" 
-                className={`w-auto h-auto lg:max-h-[85vh] object-contain origin-center absolute inset-0 m-auto right-0 z-10 select-none transition-opacity duration-700 ease-in-out ${
+                className={`w-auto h-auto lg:max-h-[85vh] object-contain origin-center absolute inset-0 m-auto right-0 z-10 select-none transition-all duration-700 ease-in-out ${
                   isNight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                } ${
+                  isNightImageLoaded ? 'blur-0 scale-100' : 'blur-xl scale-[1.02]'
                 }`} 
               />
             </div>
@@ -368,10 +383,12 @@ export function HeroSection() {
                             <img 
                               src="/assets/images/ui/hero-building-day.png" 
                               alt="Jirjirak Isometric Studio (Day)" 
-                              className={`w-full h-full object-contain pointer-events-none select-none transition-opacity duration-700 ease-in-out ${
+                              className={`w-full h-full object-contain pointer-events-none select-none transition-all duration-700 ease-in-out ${
                                 isMapLocked ? 'brightness-90' : 'brightness-100'
                               } ${
                                 !isNight ? 'relative z-10 opacity-100' : 'opacity-0 absolute inset-0'
+                              } ${
+                                isDayImageLoaded ? 'blur-0 scale-100' : 'blur-xl scale-[1.02]'
                               }`} 
                             />
 
@@ -379,10 +396,12 @@ export function HeroSection() {
                             <img 
                               src="/assets/images/ui/hero-building-night.png" 
                               alt="Jirjirak Isometric Studio (Night)" 
-                              className={`w-full h-full object-contain pointer-events-none select-none transition-opacity duration-700 ease-in-out ${
+                              className={`w-full h-full object-contain pointer-events-none select-none transition-all duration-700 ease-in-out ${
                                 isMapLocked ? 'brightness-75' : 'brightness-100'
                               } ${
                                 isNight ? 'relative z-10 opacity-100' : 'opacity-0 absolute inset-0'
+                              } ${
+                                isNightImageLoaded ? 'blur-0 scale-100' : 'blur-xl scale-[1.02]'
                               }`} 
                             />
                           </div>

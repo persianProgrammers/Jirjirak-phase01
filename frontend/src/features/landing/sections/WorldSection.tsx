@@ -7,7 +7,7 @@ import { useTranslation } from '../../../i18n/translations';
 export function WorldSection() {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const { currentLang } = useGlobalStore();
+  const { currentLang, isNight } = useGlobalStore();
   const t = useTranslation()(currentLang);
 
   useEffect(() => {
@@ -32,13 +32,19 @@ export function WorldSection() {
   }, []);
 
   return (
-    <section id="world" ref={containerRef} className="relative py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden">
-      <div className="max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section 
+      id="world" 
+      ref={containerRef} 
+      className={`relative py-24 lg:py-32 px-8 lg:px-12 xl:px-16 overflow-hidden transition-colors duration-700 ease-in-out ${
+        isNight ? 'bg-brand-light text-brand-dark' : 'bg-brand-dark text-brand-light'
+      }`}
+    >
+      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-0 items-center relative z-10">
         
-        {/* Text Content (Left Side) */}
-        <div ref={textRef} className="flex flex-col items-start lg:pr-12 rtl:lg:pr-0 rtl:lg:pl-12">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.world.step}</span>
+        {/* Text Content (Col 1 on Desktop - 5 Cols like HeroSection) */}
+        <div ref={textRef} className="lg:col-span-5 flex flex-col items-start max-w-xl justify-center w-full lg:pr-8 rtl:lg:pr-0 rtl:lg:pl-8">
+          <div className="flex items-center gap-4 mb-6">
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-gray' : 'text-brand-gray'}`}>{t.world.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.world.badge}</span>
           </div>
           
@@ -47,11 +53,14 @@ export function WorldSection() {
             {t.world.titleLine2}
           </h2>
           
-          <p className="text-brand-gray text-lg mb-10 max-w-md leading-relaxed">
+          <p className={`text-lg mb-6 lg:mb-10 max-w-md leading-relaxed ${isNight ? 'text-brand-gray' : 'text-neutral-400'}`}>
             {t.world.description}
           </p>
           
-          <button className="px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2">
+          {/* Desktop Button - Hidden on mobile */}
+          <button className={`hidden lg:flex px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors items-center gap-2 ${
+            !isNight ? 'hover:bg-white hover:text-brand-dark' : ''
+          }`}>
             {t.world.enterWorld}
             <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -59,9 +68,21 @@ export function WorldSection() {
           </button>
         </div>
 
-        {/* World Interactive Area (Right Side) */}
-        <div className="relative h-[500px] lg:h-[700px] w-full rounded-2xl overflow-hidden shadow-2xl">
+        {/* World Interactive Area (Col 2 on Desktop - 7 Cols like HeroSection) */}
+        <div className="lg:col-span-7 relative w-[calc(100%+3rem)] -mx-6 sm:w-[calc(100%+4rem)] sm:-mx-8 lg:w-full lg:mx-0 flex items-center justify-center lg:justify-end">
            <WorldPlaceholder />
+        </div>
+
+        {/* Mobile Button - Displayed directly below the image on mobile screens */}
+        <div className="flex lg:hidden w-full justify-start mt-4">
+          <button className={`px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2 ${
+            !isNight ? 'hover:bg-white hover:text-brand-dark' : ''
+          }`}>
+            {t.world.enterWorld}
+            <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
         </div>
 
       </div>

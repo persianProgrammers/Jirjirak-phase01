@@ -1,111 +1,95 @@
-import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
+
+export interface AnimatedJirjirakLogoProps {
+  className?: string;
+  variant?: 'header' | 'footer';
+  /**
+   * اگر true باشد، بال می‌زند (مانند پرده ترنزیشن).
+   * اگر false یا تعریف‌نشده باشد، با هاور ماوس شروع به بال زدن در لوپ بی‌نهایت می‌کند و با خروج ماوس متوقف می‌شود.
+   */
+  alwaysAnimate?: boolean;
+  /**
+   * تاخیر بر حسب میلی‌ثانیه قبل از شروع حرکت بال‌ها (مثلا ۱۰۰۰ میلی‌ثانیه در پرده ترنزیشن).
+   * در این مدت لوگو کاملاً نمایش داده می‌شود اما بال‌ها ساکن هستند.
+   */
+  startDelayMs?: number;
+}
 
 /**
  * AnimatedJirjirakLogo Component
  * 
- * فیزیک پرگار و پین شدن دقیق در باریک‌ترین نقطه پایین هر بال:
+ * بال‌های متحرک جیرجیرک با دو تم رنگی:
+ * ۱. variant="header":
+ *    - بال عقب: خاکستری #e9e9e9
+ *    - بال جلو: زرد #fff083
+ *    - خطوط کانتور: #222222
  * 
- * بررسی دقیق مختصات وکتور در viewBox="0 0 260.1 317.1":
- * ۱. بال جلو (Fornt Wing):
- *    باریک‌ترین و پایینی‌ترین نوک در مختصات (155.6px, 298.5px) قرار دارد:
- *    l-87.83,243.95 (y: 298) -> l-7.56,-.64 -> l-29.76,-92.08
- *    => پین قطعی و پرگاری: (156px, 298px)
+ * ۲. variant="footer":
+ *    - بال عقب: خاکستری #e9e9e9
+ *    - بال جلو: مشکی تیره #222222
+ *    - خطوط کانتور: #222222
  * 
- * ۲. بال عقب (Back Wing):
- *    باریک‌ترین و پایینی‌ترین نوک در مختصات (119.5px, 308.2px) قرار دارد:
- *    l86.85,217.94 -> c3.98,10,14.01,15.99,24.49,14.63h0 -> l25.12,-83.56
- *    => پین قطعی و پرگاری: (120px, 308px)
- * 
- * ریتم صدای جیرجیرک با سرعت بسیار بالا و برق‌آسا (High-Frequency Stridulation):
- * - جیرجیر ۱: ۳ تا ۴ ضربه بسیار سریع و برقی با فرکانس بالا (هر ضربه در کسری از ثانیه ~ ۶۰ تا ۸۰ میلی‌ثانیه)
- * - سکوت ۱: مکث کوتاه و محسوس (~۰.۴ ثانیه)
- * - جیرجیر ۲: ۳ تا ۴ ضربه پرسرعت دیگر
- * - سکوت ۲: مکث طولانی‌تر و شنیدنی (~۱.۸ ثانیه)
- * - لوپ تمیز و بدون پرش
+ * رفتار:
+ * - بدون هیچ‌گونه تولتیپ پیش‌فرض مرورگر (حذف هرگونه attribute title).
+ * - در هدر و فوتر بدون جابجایی یا زوم در همان مکان دقیق شروع به بال‌زدن لوپ می‌کند.
+ * - در پرده ترنزیشن لوگو بلافاصله نمایش داده می‌شود و بعد از ۱ ثانیه تاخیر شروع به بال زدن می‌کند.
  */
-export function AnimatedJirjirakLogo({ className = "h-16 md:h-20 lg:h-24 w-auto" }: { className?: string }) {
-  // ریتم جیرجیرک با سرعت بالا در یک دوره تناوب ۳.۲ ثانیه‌ای:
-  // مدت کل: 3.2 ثانیه
-  // جیرجیر اول (بسیار سریع در 0.28 ثانیه اول): ۳ بار سایش برق‌آسا به بیرون و بازگشت دقیق به 0
-  // سکوت کوتاه (0.28s تا 0.72s): 0.44 ثانیه سکوت کامل
-  // جیرجیر دوم (بسیار سریع در 0.72s تا 1.00s): ۳ بار سایش برق‌آسای مجدد
-  // سکوت طولانی (1.00s تا 3.20s): ۲.۲ ثانیه سکوت شبانه
+export function AnimatedJirjirakLogo({ 
+  className = "h-16 md:h-20 lg:h-24 w-auto",
+  variant = 'header',
+  alwaysAnimate = false,
+  startDelayMs = 0
+}: AnimatedJirjirakLogoProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [delayElapsed, setDelayElapsed] = useState(startDelayMs <= 0);
 
-  // بال جلو (Front Wing): باز شدن به سمت راست (+16 deg) و برگشت به 0
-  const frontWingRotations = [
-    0,   // 0.0s
-    15,  // 0.04s (ضربه ۱ باز)
-    0,   // 0.08s (ضربه ۱ بسته)
-    17,  // 0.13s (ضربه ۲ باز)
-    0,   // 0.18s (ضربه ۲ بسته)
-    16,  // 0.23s (ضربه ۳ باز)
-    0,   // 0.28s (ضربه ۳ بسته)
-    0,   // 0.72s [سکوت کوتاه - بال‌ها کاملاً بی حرکت در 0]
-    15,  // 0.76s (دسته دوم: ضربه ۱ باز)
-    0,   // 0.80s (دسته دوم: ضربه ۱ بسته)
-    17,  // 0.85s (دسته دوم: ضربه ۲ باز)
-    0,   // 0.90s (دسته دوم: ضربه ۲ بسته)
-    16,  // 0.95s (دسته دوم: ضربه ۳ باز)
-    0,   // 1.00s (دسته دوم: ضربه ۳ بسته)
-    0,   // 3.20s [سکوت طولانی شبانه تا انتهای لوپ]
-  ];
+  useEffect(() => {
+    if (startDelayMs <= 0) {
+      setDelayElapsed(true);
+      return;
+    }
+    setDelayElapsed(false);
+    const timer = setTimeout(() => {
+      setDelayElapsed(true);
+    }, startDelayMs);
+    return () => clearTimeout(timer);
+  }, [startDelayMs]);
 
-  // بال عقب (Back Wing): همزمان در جهت مخالف به سمت چپ (-15 deg) و برگشت به 0
-  const backWingRotations = [
-    0,   // 0.0s
-    -14, // 0.04s
-    0,   // 0.08s
-    -16, // 0.13s
-    0,   // 0.18s
-    -15, // 0.23s
-    0,   // 0.28s
-    0,   // 0.72s [سکوت کوتاه]
-    -14, // 0.76s
-    0,   // 0.80s
-    -16, // 0.85s
-    0,   // 0.90s
-    -15, // 0.95s
-    0,   // 1.00s
-    0,   // 3.20s [سکوت طولانی]
-  ];
+  // انیمیشن زمانی فعال است که:
+  // ۱. در حالت هاور باشد (هاور تاخیر ندارد و درجا شروع می‌شود)
+  // ۲. یا در حالت alwaysAnimate باشد و زمان تاخیر تعیین‌شده (مثلا ۱ ثانیه پرده) سپری شده باشد
+  const shouldAnimate = isHovered || (alwaysAnimate && delayElapsed);
 
-  // تقسیم‌بندی زمانی نرمال‌شده بر مبنای ۳.۲ ثانیه
-  const chirpTimes = [
-    0,
-    0.0125, // 0.04s
-    0.025,  // 0.08s
-    0.040,  // 0.13s
-    0.056,  // 0.18s
-    0.072,  // 0.23s
-    0.0875, // 0.28s
-    0.225,  // 0.72s (پایان سکوت کوتاه)
-    0.2375, // 0.76s
-    0.250,  // 0.80s
-    0.265,  // 0.85s
-    0.281,  // 0.90s
-    0.297,  // 0.95s
-    0.3125, // 1.00s (پایان جیرجیر دوم)
-    1.00,   // 3.20s (پایان سکوت طولانی)
-  ];
+  // تقسیم‌بندی زمانی کل چرخه ۲.۴ ثانیه‌ای:
+  // جیر ۱ (۲ رفت‌وبرگشت سریع) -> مکث ۳ صدم ثانیه -> جیر ۲ (۲ رفت‌وبرگشت سریع) -> سکوت -> جیر ۱ -> جیر ۲ -> سکوت طولانی
+  const keyTimes = "0; 0.00833; 0.01667; 0.025; 0.03333; 0.04583; 0.05417; 0.0625; 0.07083; 0.07917; 0.27083; 0.27917; 0.2875; 0.29583; 0.30417; 0.31667; 0.325; 0.33333; 0.34167; 0.35; 1";
+
+  // ۱. بال عقب (خاکستری): زاویه -۶.۵ درجه حول مفصل قرمز رنگ (112, 292)
+  const backWingValues = 
+    "0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292";
+
+  // ۲. بال جلو (زرد در هدر / مشکی در فوتر): زاویه +۷.۰ درجه حول مفصل قرمز رنگ (147, 290)
+  const frontWingValues = 
+    "0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290";
+
+  // رنگ‌بندی بال‌ها متناسب با هدر یا فوتر:
+  const backFill = "#e9e9e9";
+  const frontFill = variant === 'footer' ? "#222222" : "#fff083";
 
   return (
     <svg 
-      id="Jirjirak_Live_Acoustic_Logo" 
+      id={variant === 'footer' ? "Jirjirak_Footer_Logo" : "Jirjirak_Header_Logo"}
       xmlns="http://www.w3.org/2000/svg" 
       viewBox="0 0 260.1 317.1"
-      className={`${className} overflow-visible select-none drop-shadow-[0_0_25px_rgba(255,240,131,0.3)]`}
+      className={`${className} overflow-visible select-none cursor-pointer ${
+        alwaysAnimate ? 'drop-shadow-[0_0_25px_rgba(255,240,131,0.3)]' : ''
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <defs>
         <style>{`
-          .j-back-wing {
-            fill: #e9e9e9;
-            stroke-width: 6.4px;
-            stroke: #222222;
-            stroke-miterlimit: 10;
-          }
-          .j-front-wing {
-            fill: #fff083;
-            stroke-width: 6.51px;
+          .j-wing-contour {
             stroke: #222222;
             stroke-miterlimit: 10;
           }
@@ -113,60 +97,54 @@ export function AnimatedJirjirakLogo({ className = "h-16 md:h-20 lg:h-24 w-auto"
       </defs>
 
       {/* 
-        ۱. بال عقب (Back Wing)
-        پین قطعی مثل پرگار در باریک‌ترین انتهای پایینی: x = 120px, y = 308px
-        حرکت: چرخش دورانی دقیق حول همین نقطه ثابت
+        ۱. بال عقب (خاکستری #e9e9e9) - Back Wing
+        مفصل چرخش ثابت: (112, 292)
       */}
-      <motion.g 
-        id="Back_Wing" 
-        data-name="Back Wing"
-        style={{ 
-          transformOrigin: "120px 308px", 
-          transformBox: "view-box" 
-        }}
-        animate={{ 
-          rotate: backWingRotations,
-        }}
-        transition={{ 
-          duration: 3.2, 
-          times: chirpTimes, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-      >
+      <g id="Back_Wing" data-name="Back Wing">
         <path 
-          className="j-back-wing" 
+          className="j-wing-contour"
+          style={{ 
+            fill: backFill, 
+            strokeWidth: "6.4px" 
+          }}
           d="M163.69,18.24L34.47,34.93c-5.94.77-11.38,3.83-15.21,8.56l-10.61,13.09c-5.56,6.86-6.99,16.29-3.72,24.51l86.85,217.94c3.98,10,14.01,15.99,24.49,14.63h0c9.2-1.19,16.88-7.81,19.62-16.9l25.12-83.56c.58-1.92.92-3.91,1.02-5.92l8.72-182.32c.19-4.01-3.18-7.21-7.07-6.71Z" 
         />
-      </motion.g>
+        {shouldAnimate && (
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values={backWingValues}
+            keyTimes={keyTimes}
+            dur="2.4s"
+            repeatCount="indefinite"
+          />
+        )}
+      </g>
 
       {/* 
-        ۲. بال جلو (Front Wing)
-        پین قطعی مثل پرگار در باریک‌ترین انتهای پایینی: x = 156px, y = 298px
-        حرکت: چرخش دورانی دقیق حول همین نقطه ثابت در خلاف جهت بال اول
+        ۲. بال جلو (زرد #fff083 در هدر / مشکی #222222 در فوتر) - Front Wing
+        مفصل چرخش ثابت: (147, 290)
       */}
-      <motion.g 
-        id="Fornt_Wing" 
-        data-name="Fornt Wing"
-        style={{ 
-          transformOrigin: "156px 298px", 
-          transformBox: "view-box" 
-        }}
-        animate={{ 
-          rotate: frontWingRotations,
-        }}
-        transition={{ 
-          duration: 3.2, 
-          times: chirpTimes, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-      >
+      <g id="Fornt_Wing" data-name="Fornt Wing">
         <path 
-          className="j-front-wing" 
+          className="j-wing-contour"
+          style={{ 
+            fill: frontFill, 
+            strokeWidth: "6.51px" 
+          }}
           d="M87.92,3.28l136.39,11.63c4.91.42,9.44,2.74,12.6,6.47l15.6,18.37c4.22,4.97,5.46,11.79,3.26,17.91l-87.83,243.95c-2.84,7.88-10.71,12.88-19.14,12.16l-7.56-.64c-7.45-.64-13.78-5.63-16.05-12.66l-29.76-92.08c-.45-1.39-.73-2.83-.83-4.29L80.8,10.2c-.28-3.97,3.1-7.26,7.12-6.92Z" 
         />
-      </motion.g>
+        {shouldAnimate && (
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values={frontWingValues}
+            keyTimes={keyTimes}
+            dur="2.4s"
+            repeatCount="indefinite"
+          />
+        )}
+      </g>
     </svg>
   );
 }

@@ -71,7 +71,7 @@ export function AboutSection() {
                 className={`flex-1 min-w-[200px] p-6 rounded-lg border cursor-pointer transition-transform duration-300 hover:-translate-y-2 flex flex-col justify-between h-[200px] ${
                   member.highlight 
                     ? 'bg-brand-yellow text-brand-dark border-brand-yellow' 
-                    : 'bg-brand-dark/80 backdrop-blur-md text-brand-light border-brand-surface-light hover:border-brand-gray'
+                    : 'bg-brand-dark/95 text-brand-light border-brand-surface-light hover:border-brand-gray'
                 }`}
               >
                 <div>

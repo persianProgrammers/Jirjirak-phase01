@@ -30,7 +30,7 @@ export function FeaturedProjectsSection() {
   }, []);
 
   return (
-    <section id="work" ref={containerRef} className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden">
+    <section id="work" ref={containerRef} data-cursor="project" className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden">
       <div className="max-w-[1600px] mx-auto w-full flex flex-col xl:flex-row gap-16 items-center">
         
         {/* Text Content */}
@@ -109,12 +109,12 @@ export function FeaturedProjectsSection() {
 
           {/* Navigation Arrows (Positioned outside the central composition) */}
           <div className="absolute -bottom-6 w-full flex justify-center gap-4 z-30">
-            <button aria-label={t.featuredProjects.prev} className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
+            <button aria-label={t.featuredProjects.prev} className="w-12 h-12 rounded-full border border-gray-200 bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
               <svg className="w-5 h-5 text-brand-dark rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
             </button>
-            <button aria-label={t.featuredProjects.next} className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
+            <button aria-label={t.featuredProjects.next} className="w-12 h-12 rounded-full border border-gray-200 bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
               <svg className="w-5 h-5 text-brand-dark rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>

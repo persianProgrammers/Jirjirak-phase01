@@ -49,7 +49,7 @@ export default function MainLayout() {
         {/* 🌐 Vintage Typewriter Language Switcher */}
         <LanguageToggle />
 
-        {/* 🎺 Steampunk Animated Gramophone Audio Player */}
+        {/* 🎷 Vintage Gramophone Audio Player (Plays jirjirak-music.mp3) */}
         <AudioToggle />
       </div>
 
