@@ -1,9 +1,14 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { gsap } from '../../../animations/gsap';
+import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
 
 export function ContactSection() {
   const containerRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const { currentLang, isNight } = useGlobalStore();
+  const t = useTranslation()(currentLang);
+  const [selectedInterest, setSelectedInterest] = useState(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -17,30 +22,46 @@ export function ContactSection() {
   }, []);
 
   return (
-    <section id="contact" ref={containerRef} className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden border-t border-gray-200">
+    <section 
+      id="contact" 
+      ref={containerRef} 
+      className={`py-32 px-8 lg:px-12 xl:px-16 overflow-hidden transition-colors duration-700 ease-in-out border-t ${
+        isNight 
+          ? 'bg-brand-dark text-brand-light border-white/10' 
+          : 'bg-brand-light text-brand-dark border-gray-200'
+      }`}
+    >
       <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-16">
         
         {/* Left Column (Header) */}
-        <div className="lg:w-1/3 flex flex-col items-start">
+        <div className="lg:w-1/3 flex flex-col items-start lg:self-stretch">
+          {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">08 / 08</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">Contact</span>
+            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.contact.step}</span>
+            <span className="text-xs font-semibold tracking-widest uppercase">{t.contact.badge}</span>
           </div>
           
-          <h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Got something<br />to build?
-          </h2>
-          
-          <p className="text-brand-gray text-base leading-relaxed mb-12 max-w-sm">
-            Tell us about your idea, project or just say hi. We'd love to hear from you.
-          </p>
+          {/* Centered Content: Title, Description & Button */}
+          <div className="lg:my-auto flex flex-col items-start py-6 lg:py-0 w-full">
+            <h2 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+              {t.contact.titleLine1}<br />{t.contact.titleLine2}
+            </h2>
+            
+            <p className={`text-base leading-relaxed mb-10 max-w-sm ${
+              isNight ? 'text-brand-gray' : 'text-neutral-600'
+            }`}>
+              {t.contact.description}
+            </p>
 
-          <button className="px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2">
-            Start a conversation
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </button>
+            <button className="px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2">
+              {t.contact.startConversation}
+              <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+          <div className="hidden lg:block h-8 w-full" aria-hidden="true" />
         </div>
 
         {/* Right Column (Form) */}
@@ -48,62 +69,62 @@ export function ContactSection() {
           
           {/* Column 1 */}
           <div className="flex flex-col gap-4">
-             <h3 className="text-xs font-bold uppercase tracking-widest mb-2">What are we building?</h3>
+             <h3 className="text-xs font-bold uppercase tracking-widest mb-2">{t.contact.whatBuilding}</h3>
              
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <div className="w-4 h-4 rounded-full border border-gray-300 group-hover:border-brand-dark flex items-center justify-center">
-                 {/* Active state would have an inner dot */}
-               </div>
-               <span className="text-sm font-medium">A brand</span>
-             </label>
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <div className="w-4 h-4 rounded-full border border-gray-300 group-hover:border-brand-dark flex items-center justify-center"></div>
-               <span className="text-sm font-medium">A website</span>
-             </label>
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <div className="w-4 h-4 rounded-full border border-gray-300 group-hover:border-brand-dark flex items-center justify-center"></div>
-               <span className="text-sm font-medium">A digital product</span>
-             </label>
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <div className="w-4 h-4 rounded-full border border-gray-300 group-hover:border-brand-dark flex items-center justify-center"></div>
-               <span className="text-sm font-medium">A campaign</span>
-             </label>
-             <label className="flex items-center gap-3 cursor-pointer group">
-               <div className="w-4 h-4 rounded-full border border-gray-300 group-hover:border-brand-dark flex items-center justify-center"></div>
-               <span className="text-sm font-medium">Something weird</span>
-             </label>
+             {t.contact.interests.map((interest, idx) => (
+               <label 
+                 key={idx} 
+                 onClick={() => setSelectedInterest(idx)}
+                 className="flex items-center gap-3 cursor-pointer group select-none"
+               >
+                 <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                   selectedInterest === idx 
+                     ? isNight ? 'border-brand-yellow' : 'border-brand-dark' 
+                     : isNight ? 'border-gray-600 group-hover:border-brand-yellow' : 'border-gray-300 group-hover:border-brand-dark'
+                 }`}>
+                   {selectedInterest === idx && (
+                     <div className={`w-2 h-2 rounded-full ${isNight ? 'bg-brand-yellow' : 'bg-brand-dark'}`}></div>
+                   )}
+                 </div>
+                 <span className="text-sm font-medium">{interest}</span>
+               </label>
+             ))}
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col gap-8">
              <div className="flex flex-col gap-4">
-               <h3 className="text-xs font-bold uppercase tracking-widest mb-2">Tell us about it</h3>
+               <h3 className="text-xs font-bold uppercase tracking-widest mb-2">{t.contact.tellUs}</h3>
                <textarea 
-                 placeholder="Write a short message..." 
-                 className="w-full h-32 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:border-brand-dark transition-colors"
+                 placeholder={t.contact.placeholder} 
+                 className={`w-full h-32 p-4 border rounded-lg text-sm resize-none focus:outline-none transition-colors ${
+                   isNight 
+                     ? 'bg-brand-surface border-white/10 text-white focus:border-brand-yellow' 
+                     : 'bg-gray-50 border-gray-200 text-brand-dark focus:border-brand-dark'
+                 }`}
                ></textarea>
              </div>
 
              <div className="flex flex-col gap-4">
-               <h3 className="text-xs font-bold uppercase tracking-widest mb-2">How big is the idea?</h3>
+               <h3 className="text-xs font-bold uppercase tracking-widest mb-2">{t.contact.howBig}</h3>
                <div className="relative pt-2 pb-6">
                  {/* Custom Slider Track */}
-                 <div className="w-full h-1 bg-gray-200 rounded-full relative">
+                 <div className={`w-full h-1 rounded-full relative ${isNight ? 'bg-white/10' : 'bg-gray-200'}`}>
                    {/* Active Track */}
-                   <div className="absolute left-0 top-0 h-full bg-brand-yellow w-1/3 rounded-full"></div>
+                   <div className="absolute left-0 rtl:left-auto rtl:right-0 top-0 h-full bg-brand-yellow w-1/3 rounded-full"></div>
                    {/* Thumb */}
-                   <div className="absolute left-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-brand-dark rounded-full border-2 border-brand-yellow shadow cursor-pointer"></div>
+                   <div className="absolute left-1/3 rtl:left-auto rtl:right-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2 w-4 h-4 bg-brand-dark rounded-full border-2 border-brand-yellow shadow cursor-pointer"></div>
                  </div>
                  <div className="flex justify-between mt-3 text-[10px] font-bold text-brand-gray uppercase tracking-widest">
-                   <span>Small</span>
-                   <span>Huge</span>
+                   <span>{t.contact.small}</span>
+                   <span>{t.contact.huge}</span>
                  </div>
                </div>
              </div>
 
              <button className="px-8 lg:px-12 xl:px-16 py-4 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center justify-center gap-2 self-start w-full md:w-auto">
-               Send it to Jirjirak
-               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+               {t.contact.sendBtn}
+               <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                  <path d="M5 12h14M12 5l7 7-7 7"/>
                </svg>
              </button>

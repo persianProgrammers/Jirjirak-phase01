@@ -1,9 +1,13 @@
 import { useRef, useEffect } from 'react';
-import { gsap, ScrollTrigger } from '../../../animations/gsap';
+import { gsap } from '../../../animations/gsap';
+import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
 
 export function FeaturedProjectsSection() {
   const containerRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { currentLang, isNight } = useGlobalStore();
+  const t = useTranslation()(currentLang);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -26,27 +30,43 @@ export function FeaturedProjectsSection() {
   }, []);
 
   return (
-    <section id="work" ref={containerRef} className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden">
+    <section 
+      id="work" 
+      ref={containerRef} 
+      data-cursor="project" 
+      className={`py-32 px-8 lg:px-12 xl:px-16 overflow-hidden transition-colors duration-700 ease-in-out ${
+        isNight ? 'bg-brand-light text-brand-dark' : 'bg-brand-dark text-brand-light'
+      }`}
+    >
       <div className="max-w-[1600px] mx-auto w-full flex flex-col xl:flex-row gap-16 items-center">
         
         {/* Text Content */}
         <div className="xl:w-1/3 flex flex-col items-start z-10 relative">
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">03 / 08</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">Jirjirak Archive</span>
+            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.featuredProjects.step}</span>
+            <span className="text-xs font-semibold tracking-widest uppercase">{t.featuredProjects.badge}</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Featured<br />Projects
+            {t.featuredProjects.titleLine1}<br />{t.featuredProjects.titleLine2}
           </h2>
           
-          <p className="text-brand-gray text-base leading-relaxed mb-12 max-w-sm">
-            A collection of ideas, collaborations and products we've built. Each project is a new world to explore.
+          <p className={`text-base leading-relaxed mb-12 max-w-sm ${
+            isNight ? 'text-brand-gray' : 'text-neutral-400'
+          }`}>
+            {t.featuredProjects.description}
           </p>
           
-          <a href="#work" className="text-xs font-bold uppercase tracking-widest text-brand-dark border-b-2 border-brand-dark pb-1 hover:text-brand-gray hover:border-brand-gray transition-colors flex items-center gap-2">
-            View All Projects
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <a 
+            href="#work" 
+            className={`text-xs font-bold uppercase tracking-widest border-b-2 pb-1 transition-colors flex items-center gap-2 ${
+              isNight 
+                ? 'text-brand-dark border-brand-dark hover:text-brand-gray hover:border-brand-gray' 
+                : 'text-brand-yellow border-brand-yellow hover:text-white hover:border-white'
+            }`}
+          >
+            {t.featuredProjects.viewAll}
+            <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
@@ -61,8 +81,8 @@ export function FeaturedProjectsSection() {
           {/* Left Project (Architectural Angle) */}
           <div className="absolute left-0 md:left-4 w-[160px] md:w-[260px] h-[350px] md:h-[480px] bg-brand-dark rounded-l-xl border border-r-0 border-gray-800 transform rotate-y-[-45deg] -translate-x-4 translate-z-[-300px] opacity-40 shadow-2xl overflow-hidden flex items-end p-6 z-0">
             <div className="text-brand-light transform rotate-y-[45deg] origin-left">
-              <h3 className="font-bold text-xs opacity-50">PREV</h3>
-              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">KAFI Branding</p>
+              <h3 className="font-bold text-xs opacity-50">{t.featuredProjects.prev}</h3>
+              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">{t.featuredProjects.prevProject}</p>
             </div>
           </div>
           
@@ -72,20 +92,20 @@ export function FeaturedProjectsSection() {
                {/* Image Placeholder */}
                <div className="absolute inset-0 bg-brand-surface-light flex items-center justify-center">
                  <div className="w-32 h-32 border border-brand-gray/30 rounded-lg rotate-12 bg-brand-dark opacity-50"></div>
-                 <span className="absolute text-[10px] text-brand-gray uppercase tracking-widest">Project Visual</span>
+                 <span className="absolute text-[10px] text-brand-gray uppercase tracking-widest">{t.featuredProjects.projectVisual}</span>
                </div>
             </div>
             {/* Center Project Footer */}
             <div className="h-28 md:h-32 bg-brand-dark p-6 md:p-8 flex flex-col justify-end text-brand-light relative">
               {/* Yellow Accent Corner */}
-              <div className="absolute top-0 right-0 w-10 h-10">
-                  <div className="absolute top-0 right-0 w-full h-full bg-brand-yellow rounded-bl-xl"></div>
+              <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-10 h-10">
+                  <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-full h-full bg-brand-yellow rounded-bl-xl rtl:rounded-bl-none rtl:rounded-br-xl"></div>
               </div>
-              <h3 className="font-bold text-xl md:text-2xl">TOYOORAN</h3>
-              <p className="text-xs md:text-sm text-brand-gray mb-2">Web / Brand / Experience</p>
+              <h3 className="font-bold text-xl md:text-2xl">{t.featuredProjects.activeTitle}</h3>
+              <p className="text-xs md:text-sm text-brand-gray mb-2">{t.featuredProjects.activeTags}</p>
               <div className="flex items-center gap-2 text-brand-yellow text-xs font-semibold uppercase tracking-wider opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-                <span>View Project</span>
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <span>{t.featuredProjects.viewProject}</span>
+                <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </div>
@@ -93,10 +113,10 @@ export function FeaturedProjectsSection() {
           </div>
           
           {/* Right Project (Architectural Angle) */}
-          <div className="absolute right-0 md:right-4 w-[160px] md:w-[260px] h-[350px] md:h-[480px] bg-brand-dark rounded-r-xl border border-l-0 border-gray-800 transform rotate-y-[45deg] translate-x-4 translate-z-[-300px] opacity-40 shadow-2xl overflow-hidden flex items-end p-6 text-right justify-end z-0">
-             <div className="text-brand-light transform rotate-y-[-45deg] origin-right flex flex-col items-end">
-              <h3 className="font-bold text-xs opacity-50">NEXT</h3>
-              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">JIRJIRAK Gaming</p>
+          <div className="absolute right-0 md:right-4 w-[160px] md:w-[260px] h-[350px] md:h-[480px] bg-brand-dark rounded-r-xl border border-l-0 border-gray-800 transform rotate-y-[45deg] translate-x-4 translate-z-[-300px] opacity-40 shadow-2xl overflow-hidden flex items-end p-6 text-right rtl:text-left justify-end rtl:justify-start z-0">
+             <div className="text-brand-light transform rotate-y-[-45deg] origin-right flex flex-col items-end rtl:items-start">
+              <h3 className="font-bold text-xs opacity-50">{t.featuredProjects.next}</h3>
+              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">{t.featuredProjects.nextProject}</p>
             </div>
           </div>
 
@@ -105,13 +125,13 @@ export function FeaturedProjectsSection() {
 
           {/* Navigation Arrows (Positioned outside the central composition) */}
           <div className="absolute -bottom-6 w-full flex justify-center gap-4 z-30">
-            <button className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
-              <svg className="w-5 h-5 text-brand-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <button aria-label={t.featuredProjects.prev} className="w-12 h-12 rounded-full border border-gray-200 bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
+              <svg className="w-5 h-5 text-brand-dark rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
             </button>
-            <button className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
-              <svg className="w-5 h-5 text-brand-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <button aria-label={t.featuredProjects.next} className="w-12 h-12 rounded-full border border-gray-200 bg-white/95 shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
+              <svg className="w-5 h-5 text-brand-dark rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </button>
