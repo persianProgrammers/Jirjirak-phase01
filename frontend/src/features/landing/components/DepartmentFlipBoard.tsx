@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, type Variants } from 'motion/react';
 import { useGlobalStore } from '../../../stores/globalStore';
+import { DEPARTMENT_ANIMATED_ICONS, DepartmentPolygonalFrame } from './DepartmentAnimatedIcons';
 
 export interface DepartmentItem {
   id: string;
@@ -102,194 +103,7 @@ const DEPARTMENTS: DepartmentItem[] = [
   },
 ];
 
-/**
- * Highly responsive, 60fps+ fluid organic "Soul / Life" Droplet (Version 1).
- * Uses hardware-accelerated SVG cubic-spline geometry for buttery-smooth morphing.
- *
- * Life Injection:
- * When becoming active, it takes an extended, graceful 1.25s to blossom,
- * swelling smoothly from a quiet 6px resting dot into a rich 16.5px living liquid droplet,
- * allowing the user to clearly appreciate the organic birth and color awakening.
- *
- * Life Departure:
- * When moving on, it exhales gently over 1.15s, smoothly shrinking and fading to quiet gray.
- */
-function OrganicFlatDropletDot({
-  isActive,
-  isNight,
-}: {
-  isActive: boolean;
-  isNight: boolean;
-}) {
-  const activeFill = isNight ? '#fff083' : '#e5c928';
-  const inactiveFill = isNight ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.22)';
-
-  // Morphing SVG paths with pronounced, visible organic bulging in various directions
-  const morphPaths = [
-    // 0: Centered soft fluid drop
-    'M12,3.5 C16.6,3.5 20.5,7.4 20.5,12 C20.5,16.6 16.6,20.5 12,20.5 C7.4,20.5 3.5,16.6 3.5,12 C3.5,7.4 7.4,3.5 12,3.5 Z',
-    // 1: Bulging diagonally to top-right and bottom-left (fluid swell)
-    'M13,2.2 C19.5,3.2 22.5,9.5 21.2,14.8 C19.8,20.2 14.5,21.8 9.5,20.8 C4.5,19.8 2.0,14.5 3.2,9.2 C4.5,4.0 7.5,1.5 13,2.2 Z',
-    // 2: Squashing flat and bulging horizontally (wide fluid ripple)
-    'M12,4.8 C18.8,4.5 22.2,8.2 22.2,12 C22.2,15.8 18.8,19.5 12,19.2 C5.2,19.5 1.8,15.8 1.8,12 C1.8,8.2 5.2,4.5 12,4.8 Z',
-    // 3: Stretching tall and bulging to top-left (fluid teardrop morph)
-    'M10.8,2.0 C16.5,1.8 20.8,6.8 20.2,12.5 C19.5,18.5 15.5,22.2 11.2,21.8 C6.0,21.4 3.0,17.2 3.5,11.2 C4.0,5.5 6.2,2.2 10.8,2.0 Z',
-    // 4: Return seamlessly to 0
-    'M12,3.5 C16.6,3.5 20.5,7.4 20.5,12 C20.5,16.6 16.6,20.5 12,20.5 C7.4,20.5 3.5,16.6 3.5,12 C3.5,7.4 7.4,3.5 12,3.5 Z',
-  ];
-
-  return (
-    <div className="relative w-6 h-6 flex items-center justify-center pointer-events-none select-none">
-      {/* 1. Subtle, Soft Firefly Halo (بسیار ملایم و نرم بدون پوشاندن لبه‌های قطره) */}
-      <AnimatePresence>
-        {isActive && (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{
-              opacity: [0.12, 0.32, 0.16, 0.38, 0.12],
-              scale: [0.85, 1.18, 0.9, 1.22, 0.85],
-            }}
-            exit={{ opacity: 0, scale: 0.5, transition: { duration: 1.1 } }}
-            transition={{
-              duration: 3.2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="absolute -inset-2 rounded-full blur-[6px] pointer-events-none z-0"
-            style={{
-              background: isNight
-                ? 'radial-gradient(circle, rgba(255,240,131,0.45) 0%, rgba(255,240,131,0.12) 55%, transparent 75%)'
-                : 'radial-gradient(circle, rgba(204,180,35,0.38) 0%, rgba(204,180,35,0.08) 55%, transparent 75%)',
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* 2. SVG Canvas with Crisp 2D Silhouette & Pronounced Multi-Directional Wobble */}
-      <svg
-        viewBox="0 0 24 24"
-        className="w-full h-full overflow-visible will-change-transform z-10"
-      >
-        <motion.g
-          animate={
-            isActive
-              ? {
-                  scale: 1,
-                  scaleX: [1, 1.14, 0.88, 1.12, 1],
-                  scaleY: [1, 0.88, 1.16, 0.90, 1],
-                  rotate: [0, -9, 11, -7, 0],
-                }
-              : {
-                  scale: 0.36, // Scaled down to calm 6px resting dot
-                  scaleX: 1,
-                  scaleY: 1,
-                  rotate: 0,
-                }
-          }
-          transition={
-            isActive
-              ? {
-                  // Extended awakening curve (1.25s)
-                  scale: {
-                    duration: 1.25,
-                    ease: [0.22, 1.2, 0.36, 1],
-                  },
-                  // Pronounced organic breathing wobble in directions
-                  scaleX: {
-                    duration: 3.4,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  },
-                  scaleY: {
-                    duration: 3.4,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  },
-                  rotate: {
-                    duration: 4.2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  },
-                }
-              : {
-                  // Graceful, calm exhalation and deflation (1.15s)
-                  scale: {
-                    duration: 1.15,
-                    ease: [0.25, 1, 0.5, 1],
-                  },
-                  scaleX: { duration: 0.8, ease: 'easeInOut' },
-                  scaleY: { duration: 0.8, ease: 'easeInOut' },
-                  rotate: {
-                    duration: 0.9,
-                    ease: 'easeOut',
-                  },
-                }
-          }
-          style={{ transformOrigin: '12px 12px' }}
-        >
-          <motion.path
-            d={morphPaths[0]}
-            animate={
-              isActive
-                ? {
-                    d: morphPaths,
-                    fill: activeFill,
-                  }
-                : {
-                    d: morphPaths[0],
-                    fill: inactiveFill,
-                  }
-            }
-            transition={
-              isActive
-                ? {
-                    // Pronounced fluid morphing between bulging states
-                    d: {
-                      duration: 3.4,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    },
-                    // Warm golden color awakening over 1.05s
-                    fill: {
-                      duration: 1.05,
-                      ease: [0.25, 1, 0.5, 1],
-                    },
-                  }
-                : {
-                    d: {
-                      duration: 1.0,
-                      ease: 'easeInOut',
-                    },
-                    // Gentle color drain over 1.2s
-                    fill: {
-                      duration: 1.2,
-                      ease: [0.4, 0, 0.2, 1],
-                    },
-                  }
-            }
-          />
-        </motion.g>
-      </svg>
-
-      {/* 3. Subtle Firefly Life Pulse Ripple */}
-      {isActive && (
-        <motion.span
-          initial={{ scale: 0.4, opacity: 0.4 }}
-          animate={{
-            scale: [0.55, 1.55, 0.55],
-            opacity: [0.25, 0, 0.25],
-          }}
-          transition={{
-            duration: 3.0,
-            repeat: Infinity,
-            ease: 'easeOut',
-          }}
-          className="absolute inset-0 m-auto w-4 h-4 rounded-full border border-brand-yellow/35 pointer-events-none z-0"
-        />
-      )}
-    </div>
-  );
-}
+const DEPARTMENT_ICONS = DEPARTMENT_ANIMATED_ICONS;
 
 export function DepartmentFlipBoard() {
   const { currentLang, isNight } = useGlobalStore();
@@ -357,16 +171,59 @@ export function DepartmentFlipBoard() {
     };
   }, [goToNext, goToPrev]);
 
+  // Drag handler for smooth vertical swipe
+  const handleDragEnd = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: { offset: { y: number }; velocity: { y: number } }
+  ) => {
+    const threshold = 35;
+    const velocityThreshold = 150;
+
+    if (info.offset.y > threshold || info.velocity.y > velocityThreshold) {
+      goToNext();
+    } else if (info.offset.y < -threshold || info.velocity.y < -velocityThreshold) {
+      goToPrev();
+    }
+  };
+
   const currentDept = DEPARTMENTS[currentIndex];
-  const titleText = isFa ? currentDept.titleFa : currentDept.titleEn;
-  const titleWords = titleText.split(' ');
+  const IconComponent = DEPARTMENT_ICONS[currentIndex];
+
+  // Whisper-Smooth, Lightweight Vertical Slide Animation
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({
+      y: dir > 0 ? -32 : 32,
+      opacity: 0,
+      scale: 0.98,
+    }),
+    center: {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        y: { type: 'spring', stiffness: 240, damping: 26, mass: 0.75 },
+        opacity: { duration: 0.28, ease: 'easeOut' as const },
+        scale: { duration: 0.28, ease: 'easeOut' as const },
+      },
+    },
+    exit: (dir: number) => ({
+      y: dir > 0 ? 32 : -32,
+      opacity: 0,
+      scale: 0.98,
+      transition: {
+        y: { duration: 0.22, ease: 'easeIn' as const },
+        opacity: { duration: 0.18, ease: 'easeIn' as const },
+        scale: { duration: 0.2 },
+      },
+    }),
+  };
 
   return (
     <div 
       ref={boardRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full rounded-none sm:rounded-2xl transition-colors duration-500 relative overflow-hidden flex items-center justify-center select-none border-y sm:border shadow-md min-h-[300px] sm:min-h-[340px] lg:min-h-[400px] xl:min-h-[440px] ${
+      className={`w-full h-full min-h-[480px] lg:min-h-[520px] self-stretch rounded-2xl transition-colors duration-500 relative overflow-hidden flex items-center justify-center select-none cursor-grab active:cursor-grabbing border shadow-md ${
         isNight 
           ? 'bg-brand-surface border-brand-surface-light text-brand-light shadow-[0_16px_40px_rgba(0,0,0,0.4)]' 
           : 'bg-white border-gray-200 text-brand-dark shadow-[0_12px_30px_rgba(0,0,0,0.05)]'
@@ -383,9 +240,9 @@ export function DepartmentFlipBoard() {
         }}
       />
 
-      {/* Delicate Vertical Navigation Dots on the Side Edge */}
+      {/* Delicate Vertical Navigation Dots on the Vertical Edge */}
       <div 
-        className="absolute right-2 sm:right-4 rtl:right-auto rtl:left-2 sm:rtl:left-4 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-1 sm:gap-1.5 py-2 px-0.5 rounded-full transition-all"
+        className="absolute right-3.5 sm:right-5 rtl:right-auto rtl:left-3.5 sm:rtl:left-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-2 py-2 px-1 rounded-full transition-all"
         role="tablist"
         aria-label="Department Navigation"
       >
@@ -395,16 +252,32 @@ export function DepartmentFlipBoard() {
             <button
               key={dept.id}
               onClick={() => goToIndex(idx)}
-              className="group relative flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 cursor-pointer focus:outline-none"
+              className="group relative flex items-center justify-center p-0.5 cursor-pointer focus:outline-none"
               role="tab"
               aria-selected={isActive}
               aria-label={`Slide ${dept.number}: ${isFa ? dept.titleFa : dept.titleEn}`}
             >
-              {/* 2D Flat Organic Droplet Dot with Graceful Life Injection & Drain Transition */}
-              <OrganicFlatDropletDot isActive={isActive} isNight={isNight} />
+              {/* Dynamic Slim Pill Dot */}
+              <motion.div
+                layout
+                animate={{
+                  height: isActive ? 22 : 6,
+                  backgroundColor: isActive 
+                    ? '#fff083' 
+                    : isNight 
+                      ? 'rgba(255, 255, 255, 0.22)' 
+                      : 'rgba(0, 0, 0, 0.22)',
+                }}
+                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                className={`w-1.5 rounded-full transition-all duration-200 ${
+                  isActive 
+                    ? 'shadow-[0_0_8px_rgba(255,240,131,0.5)]' 
+                    : 'group-hover:bg-brand-yellow/60'
+                }`}
+              />
 
-              {/* Tooltip on Hover (Desktop only to prevent mobile overflow) */}
-              <span className={`hidden sm:block absolute ${
+              {/* Tooltip on Hover */}
+              <span className={`absolute ${
                 isFa 
                   ? 'left-full ml-2.5' 
                   : 'right-full mr-2.5'
@@ -420,128 +293,61 @@ export function DepartmentFlipBoard() {
         })}
       </div>
 
-      {/* Main Single Container Stage (Stationary frame, in-place rotating content) */}
-      <div className="w-full flex items-center justify-center px-7 sm:px-12 lg:px-16 py-8 sm:py-10 lg:py-12 relative z-10">
-        <div
-          className="w-full max-w-xl flex flex-col items-center justify-center text-center"
+      {/* Main Single Container Stage (No nested cards, pure breathing room) */}
+      <div className="w-full flex items-center justify-center px-4 sm:px-8 lg:px-10 py-7 relative z-10">
+        <motion.div
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.15}
+          onDragEnd={handleDragEnd}
+          className="w-full flex items-center justify-center"
         >
-          {/* In-Place 3D Drum / Slot Machine Rolling Title */}
-          <div 
-            style={{ perspective: '900px' }} 
-            className="w-full min-h-[38px] sm:min-h-[44px] flex items-center justify-center overflow-hidden py-1"
-          >
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={`${currentDept.id}-${currentLang}`}
-                custom={direction}
-                className="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-2.5 gap-y-1"
-              >
-                {titleWords.map((word, i) => (
-                  <motion.span
-                    key={`${currentDept.id}-w-${i}`}
-                    custom={direction}
-                    initial={{
-                      y: direction > 0 ? -36 : 36,
-                      rotateX: direction > 0 ? 85 : -85,
-                      opacity: 0,
-                      filter: 'blur(3px)',
-                    }}
-                    animate={{
-                      y: 0,
-                      rotateX: 0,
-                      opacity: 1,
-                      filter: 'blur(0px)',
-                      transition: {
-                        type: 'spring',
-                        stiffness: 290,
-                        damping: 22,
-                        mass: 0.65,
-                        delay: i * 0.045, // Cascading mechanical slot reels
-                      },
-                    }}
-                    exit={{
-                      y: direction > 0 ? 36 : -36,
-                      rotateX: direction > 0 ? -85 : 85,
-                      opacity: 0,
-                      filter: 'blur(3px)',
-                      transition: {
-                        duration: 0.16,
-                        ease: 'easeIn',
-                        delay: i * 0.02,
-                      },
-                    }}
-                    style={{
-                      display: 'inline-block',
-                      transformOrigin: '50% 50%',
-                      backfaceVisibility: 'hidden',
-                    }}
-                    className={`text-xl sm:text-2xl lg:text-[28px] xl:text-[30px] font-bold tracking-tight text-center leading-snug ${
-                      isNight ? 'text-white' : 'text-brand-dark'
-                    }`}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          <AnimatePresence custom={direction} mode="wait">
+            <motion.div
+              key={currentDept.id}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="w-full max-w-xl flex flex-col items-center justify-center text-center"
+            >
+              {/* 1. Handcrafted Animated Icon within Bespoke Polygonal Frame */}
+              <div className="relative mb-6 sm:mb-7 flex items-center justify-center">
+                <DepartmentPolygonalFrame departmentIndex={currentIndex} isNight={isNight}>
+                  <IconComponent isNight={isNight} className="w-full h-full" />
+                </DepartmentPolygonalFrame>
+              </div>
 
-          {/* 3. Thin, Delicate Divider Line below Title (Stationary) */}
-          <div className="flex items-center justify-center my-4 sm:my-5 w-full">
-            <div className={`h-[1px] w-56 sm:w-72 md:w-80 max-w-xs sm:max-w-md rounded-full ${
-              isNight 
-                ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent' 
-                : 'bg-gradient-to-r from-transparent via-neutral-300 to-transparent'
-            }`} />
-          </div>
+              {/* 2. Refined, Delicate Title (Not oversized) */}
+              <h3 className={`text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-center leading-snug transition-colors duration-300 ${
+                isNight ? 'text-white' : 'text-brand-dark'
+              }`}>
+                {isFa ? currentDept.titleFa : currentDept.titleEn}
+              </h3>
 
-          {/* 4. Elegant, Legible Description (In-Place Smooth Transition) */}
-          <div className="w-full min-h-[46px] sm:min-h-[44px] flex items-center justify-center mb-5 sm:mb-6 overflow-hidden">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.p
-                key={`${currentDept.id}-${currentLang}`}
-                custom={direction}
-                initial={{ 
-                  opacity: 0, 
-                  y: direction > 0 ? -12 : 12,
-                  filter: 'blur(2px)'
-                }}
-                animate={{ 
-                  opacity: 1, 
-                  y: 0, 
-                  filter: 'blur(0px)',
-                  transition: { duration: 0.28, ease: 'easeOut' } 
-                }}
-                exit={{ 
-                  opacity: 0, 
-                  y: direction > 0 ? 12 : -12, 
-                  filter: 'blur(2px)',
-                  transition: { duration: 0.14, ease: 'easeIn' } 
-                }}
-                className={`text-xs sm:text-sm md:text-[15px] leading-relaxed max-w-lg mx-auto text-center font-normal transition-colors duration-300 ${
-                  isNight ? 'text-brand-gray/90' : 'text-neutral-600'
-                }`}
-              >
+              {/* 3. Thin, Delicate Divider Line below Title (Light Gray & Generously Sized) */}
+              <div className="flex items-center justify-center my-4 sm:my-5 w-full">
+                <div className={`h-[1px] w-64 sm:w-80 md:w-96 max-w-md rounded-full ${
+                  isNight 
+                    ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent' 
+                    : 'bg-gradient-to-r from-transparent via-neutral-300 to-transparent'
+                }`} />
+              </div>
+
+              {/* 4. Elegant, Legible Description */}
+              <p className={`text-sm sm:text-[15px] leading-relaxed mb-6 max-w-lg mx-auto text-center font-normal transition-colors duration-300 ${
+                isNight ? 'text-brand-gray/90' : 'text-neutral-600'
+              }`}>
                 {isFa ? currentDept.subtitleFa : currentDept.subtitleEn}
-              </motion.p>
-            </AnimatePresence>
-          </div>
+              </p>
 
-          {/* 5. Delicate Activity Tags (In-Place Smooth Transition) */}
-          <div className="w-full min-h-[36px] flex items-center justify-center">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={`${currentDept.id}-${currentLang}`}
-                custom={direction}
-                initial={{ opacity: 0, y: direction > 0 ? -8 : 8 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } }}
-                exit={{ opacity: 0, y: direction > 0 ? 8 : -8, transition: { duration: 0.14, ease: 'easeIn' } }}
-                className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 max-w-lg mx-auto"
-              >
+              {/* 5. Delicate Activity Tags (Clean, Minimal Pill Badges) */}
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-lg mx-auto">
                 {(isFa ? currentDept.tagsFa : currentDept.tagsEn).map((tag, idx) => (
                   <span
                     key={idx}
-                    className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-normal tracking-normal border transition-all duration-200 text-center ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-normal tracking-normal border transition-all duration-200 text-center ${
                       isNight 
                         ? 'bg-brand-surface-light/40 border-white/[0.08] text-brand-light/90 hover:border-brand-yellow/40 hover:text-brand-yellow' 
                         : 'bg-neutral-50 border-gray-200 text-neutral-700 hover:border-brand-yellow-dark hover:text-brand-dark'
@@ -550,11 +356,11 @@ export function DepartmentFlipBoard() {
                     {tag}
                   </span>
                 ))}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+              </div>
 
-        </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

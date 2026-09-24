@@ -105,8 +105,8 @@ export function DepartmentPolygonalFrame({
         />
       </svg>
 
-      {/* Centered Handcrafted Icon with Generous Scale and Breathing Room */}
-      <div className="relative z-10 w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center">
+      {/* Centered Delicate Icon with Ample Breathing Room */}
+      <div className="relative z-10 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center">
         {children}
       </div>
     </div>
@@ -350,251 +350,76 @@ export function BrandingIdentityAnimatedIcon({ isNight, className = 'w-full h-fu
 
 /**
  * 04. CREATIVE STUDIO (گرافیک و انیمیشن)
- * Masterwork Concept: The Notebook Flipbook & Frame-by-Frame Walking Stickman
- * (دفتر مشق سیمی اصیل با ورق‌خوردن کامل برگه‌ها از راست به چپ و پیشروی فریم‌به‌فریم آدمک)
- * 
- * ۱. بدنهٔ کامل و تمیز دفترچه مشق با گوشه‌های معمولی (بدون تاخوردگی)
- * ۲. عطف سیمی در سمت چپ با حلقه‌های فنری طلایی و خطوط منظم مشق
- * ۳. ورق خوردن کامل کل کاغذ از سمت راست به چپ به دور سیم‌های عطف (Full Page 3D Flip)
- * ۴. در هر ورق، آدمک یک فریم انیمیشن جلو می‌رود (گام‌به‌گام و فریم‌به‌فریم روی خطوط دفتر)
- * ۵. حذف زائده‌ها، امواج و المان‌های اضافی برای رسیدن به بالاترین حد سادگی، اصالت و شفافیت بصری
+ * Concept: Iconic Designer Bézier Pen Tool with Tangent Handles, Vector Curves & Burst of Color/Ink
  */
 export function CreativeStudioAnimatedIcon({ isNight, className = 'w-full h-full' }: IconProps) {
   const gold = isNight ? '#FFF083' : '#D4AF37';
   const stroke = isNight ? '#FFFFFF' : '#1A1A1A';
-  const paperFill = isNight ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.03)';
-  const ruledLine = isNight ? 'rgba(255, 255, 255, 0.16)' : 'rgba(0, 0, 0, 0.12)';
-  const flippingPageBg = isNight ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.85)';
 
   return (
-    <svg
-      viewBox="0 0 64 64"
-      className={`${className} overflow-visible`}
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ perspective: 600 }}
-    >
-      {/* 1. Paper Stack Thickness under the Notebook (ضخامت انباشت برگه‌ها در زیر دفتر) */}
-      <g opacity={isNight ? 0.4 : 0.3}>
-        <path d="M 14 54 L 54 54 L 56 52 L 56 14" stroke={stroke} strokeWidth="1.2" />
-        <path d="M 16 56 L 54 56 L 57 53 L 57 16" stroke={gold} strokeWidth="1.2" strokeDasharray="2 1.5" />
-      </g>
-
-      {/* 2. Main Flat Notebook Base (برگه اصلی زمینه با گوشه‌های معمولی و کادر تمیز) */}
-      <rect
-        x="12"
-        y="11"
-        width="43"
-        height="42"
-        rx="2.5"
-        stroke={stroke}
-        strokeWidth="1.8"
-        fill={paperFill}
+    <svg viewBox="0 0 64 64" className={`${className} overflow-visible`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {/* Active Bézier Curve being designed */}
+      <motion.path
+        d="M 10 50 C 18 26 34 54 54 36"
+        stroke={isNight ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.25)'}
+        strokeWidth="2"
+        strokeDasharray="4 3"
       />
 
-      {/* 3. Spiral Wire Loops on Left Spine (سیم‌های فنری عطف دفتر در سمت چپ) */}
-      <g stroke={gold} strokeWidth="1.6">
-        {[16, 23, 30, 37, 44].map((y) => (
-          <g key={y}>
-            {/* Paper Punch Hole */}
-            <circle cx="12" cy={y} r="1" fill={isNight ? '#1A1A1A' : '#E5E5E5'} stroke={stroke} strokeWidth="0.8" />
-            {/* Spiral Loop */}
-            <path d={`M 7.5 ${y - 1.5} C 5.5 ${y - 0.5}, 5.5 ${y + 2.5}, 9 ${y + 2.5} L 12.5 ${y + 0.5}`} />
-          </g>
-        ))}
-      </g>
+      {/* Bézier Tangent Control Handle Bar */}
+      <line x1="16" y1="28" x2="38" y2="44" stroke={gold} strokeWidth="1.8" />
+      <circle cx="16" cy="28" r="2.8" stroke={gold} strokeWidth="1.6" fill={isNight ? '#0E0E0E' : '#FFFFFF'} />
+      <circle cx="38" cy="44" r="2.8" stroke={gold} strokeWidth="1.6" fill={isNight ? '#0E0E0E' : '#FFFFFF'} />
 
-      {/* 4. Notebook Ruled Lines (خطوط مشق و خط حاشیه) */}
-      {/* Red/Gold Margin Line */}
-      <line x1="19" y1="11" x2="19" y2="53" stroke={gold} strokeWidth="1.2" opacity={0.7} />
-      {/* Horizontal Writing Guidelines */}
-      <line x1="20" y1="20" x2="52" y2="20" stroke={ruledLine} strokeWidth="1" strokeDasharray="3 2" />
-      <line x1="20" y1="29" x2="52" y2="29" stroke={ruledLine} strokeWidth="1" strokeDasharray="3 2" />
-      <line x1="20" y1="38" x2="52" y2="38" stroke={ruledLine} strokeWidth="1" strokeDasharray="3 2" />
-      {/* Walking Baseline for Stickman */}
-      <line x1="19" y1="47" x2="53" y2="47" stroke={stroke} strokeWidth="1.4" />
+      {/* Central Vector Anchor Point (Filled Square) */}
+      <rect x="24.5" y="33.5" width="5.5" height="5.5" fill={gold} stroke={stroke} strokeWidth="1.4" />
 
-      {/* 5. Frame-by-Frame Walking Stickman (آدمک متحرک که با هر ورق دقیقاً یک فریم جلو می‌رود) */}
+      {/* Classic Designer Pen Tool (Stylus Nib) */}
       <motion.g
         animate={{
-          // Steps forward frame by frame across 4 distinct keyframe poses synced with page turns
-          x: [0, 5, 11, 17, 0],
-          y: [0, -1.5, 0, -1.5, 0],
+          x: [0, 3, 0],
+          y: [0, -3, 0],
+          rotate: [0, 5, 0],
         }}
-        style={{ transformOrigin: '23px 40px' }}
-        transition={{
-          duration: 2.0,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.25, 0.5, 0.75, 1],
-        }}
+        style={{ transformOrigin: '42px 18px' }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
       >
-        {/* Footstep impact mark on current frame */}
-        <motion.circle
-          cx="22"
-          cy="47"
-          r="0.8"
-          fill={gold}
-          animate={{ opacity: [0, 0.9, 0], scale: [0.5, 1.4, 0.5] }}
-          transition={{ duration: 0.5, repeat: Infinity }}
-        />
-
-        {/* Head */}
-        <circle cx="23" cy="28.5" r="3.2" stroke={stroke} strokeWidth="1.8" fill={gold} />
-        {/* Eye */}
-        <circle cx="24.2" cy="28.2" r="0.55" fill={stroke} stroke="none" />
-
-        {/* Torso leaning into the walk */}
-        <line x1="23" y1="31.8" x2="24" y2="39" stroke={stroke} strokeWidth="1.8" />
-
-        {/* Arms swinging frame by frame */}
-        <motion.line
-          x1="23.5"
-          y1="34"
-          x2="28"
-          y2="37"
+        {/* Pen Shaft Handle */}
+        <path
+          d="M 52 10 L 42 20 L 36 26 L 38 28 L 44 22 L 54 12 Z"
           stroke={stroke}
-          strokeWidth="1.5"
-          animate={{
-            x2: [28, 19, 28],
-            y2: [37, 36, 37],
-          }}
-          transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
+          strokeWidth="2.2"
+          fill={isNight ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'}
         />
-        <motion.line
-          x1="23.5"
-          y1="34"
-          x2="19"
-          y2="37"
-          stroke={stroke}
-          strokeWidth="1.5"
-          animate={{
-            x2: [19, 28, 19],
-            y2: [37, 36, 37],
-          }}
-          transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Legs stepping forward frame by frame */}
-        <motion.g
-          animate={{ rotate: [-30, 26, -30] }}
-          style={{ transformOrigin: '24px 39px' }}
-          transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <line x1="24" y1="39" x2="25.5" y2="43.5" stroke={stroke} strokeWidth="1.8" />
-          <line x1="25.5" y1="43.5" x2="28" y2="47" stroke={stroke} strokeWidth="1.8" />
-          <line x1="28" y1="47" x2="30.5" y2="47" stroke={gold} strokeWidth="1.5" />
-        </motion.g>
-
-        <motion.g
-          animate={{ rotate: [26, -30, 26] }}
-          style={{ transformOrigin: '24px 39px' }}
-          transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <line x1="24" y1="39" x2="22" y2="43.5" stroke={stroke} strokeWidth="1.8" />
-          <line x1="22" y1="43.5" x2="19.5" y2="47" stroke={stroke} strokeWidth="1.8" />
-          <line x1="19.5" y1="47" x2="17" y2="47" stroke={gold} strokeWidth="1.5" />
-        </motion.g>
-      </motion.g>
-
-      {/* 6. Full Pages Flipping across from Right to Left (ورق‌خوردن کامل کل کاغذ از سمت راست به چپ) */}
-      {/* Flipping Page Sheet 1 */}
-      <motion.g
-        style={{
-          transformOrigin: '12px 32px',
-          transformStyle: 'preserve-3d',
-        }}
-        animate={{
-          rotateY: [0, -60, -120, -180],
-          skewY: [0, -6, 6, 0],
-          opacity: [0.95, 0.85, 0.7, 0],
-        }}
-        transition={{
-          duration: 1.0,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.35, 0.7, 1],
-          delay: 0,
-        }}
-      >
-        {/* Full Page Rectangle */}
-        <rect
-          x="12"
-          y="11"
-          width="43"
-          height="42"
-          rx="2.5"
-          stroke={stroke}
-          strokeWidth="1.5"
-          fill={flippingPageBg}
-        />
-        {/* Page Margin Line */}
-        <line x1="19" y1="11" x2="19" y2="53" stroke={gold} strokeWidth="1" opacity={0.6} />
-        {/* Ruled Lines on flipping page */}
-        <line x1="20" y1="20" x2="51" y2="20" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="20" y1="29" x2="51" y2="29" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="20" y1="38" x2="51" y2="38" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="19" y1="47" x2="52" y2="47" stroke={stroke} strokeWidth="1.2" />
-
-        {/* Previous frame drawing imprint on the lifting page */}
-        <circle cx="21" cy="28.5" r="2.6" stroke={stroke} strokeWidth="1.2" fill="none" opacity={0.5} />
-        <line x1="21" y1="31.2" x2="22" y2="38" stroke={stroke} strokeWidth="1.2" opacity={0.5} />
-        <line x1="22" y1="38" x2="25" y2="47" stroke={stroke} strokeWidth="1.2" opacity={0.5} />
-        <line x1="22" y1="38" x2="18" y2="47" stroke={stroke} strokeWidth="1.2" opacity={0.5} />
-      </motion.g>
-
-      {/* Flipping Page Sheet 2 (Cascading out-of-phase full sheet) */}
-      <motion.g
-        style={{
-          transformOrigin: '12px 32px',
-          transformStyle: 'preserve-3d',
-        }}
-        animate={{
-          rotateY: [0, -60, -120, -180],
-          skewY: [0, -6, 6, 0],
-          opacity: [0.95, 0.85, 0.7, 0],
-        }}
-        transition={{
-          duration: 1.0,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          times: [0, 0.35, 0.7, 1],
-          delay: 0.5,
-        }}
-      >
-        {/* Full Page Rectangle */}
-        <rect
-          x="12"
-          y="11"
-          width="43"
-          height="42"
-          rx="2.5"
+        {/* Metallic Pen Collar */}
+        <line x1="36" y1="26" x2="44" y2="22" stroke={gold} strokeWidth="2" />
+        {/* Fountain/Stylus Nib */}
+        <path
+          d="M 36 26 L 27 35 L 30 38 L 38 28 Z"
           stroke={gold}
-          strokeWidth="1.4"
-          fill={flippingPageBg}
+          strokeWidth="2.2"
+          fill={gold}
+          fillOpacity="0.3"
         />
-        {/* Margin Line */}
-        <line x1="19" y1="11" x2="19" y2="53" stroke={gold} strokeWidth="1" opacity={0.7} />
-        {/* Ruled Lines */}
-        <line x1="20" y1="20" x2="51" y2="20" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="20" y1="29" x2="51" y2="29" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="20" y1="38" x2="51" y2="38" stroke={ruledLine} strokeWidth="0.8" strokeDasharray="3 2" />
-        <line x1="19" y1="47" x2="52" y2="47" stroke={stroke} strokeWidth="1.2" />
+        {/* Center Ink Slit */}
+        <line x1="28" y1="36" x2="35" y2="29" stroke={stroke} strokeWidth="1.4" />
+        {/* Breather Hole */}
+        <circle cx="35" cy="29" r="1" fill={stroke} stroke="none" />
       </motion.g>
 
-      {/* 7. Subtle Paper Flip Dynamic Shadow along Spine (سایهٔ خمیدگی برگه در هنگام چرخش) */}
-      <motion.line
-        x1="13.5"
-        y1="12"
-        x2="13.5"
-        y2="52"
-        stroke={gold}
-        strokeWidth="1.8"
+      {/* Creative Motion Splash Particles */}
+      <motion.circle
+        cx="25"
+        cy="39"
+        r="1.8"
+        fill={gold}
         animate={{
-          opacity: [0.2, 0.8, 0.2],
+          x: [-3, -10],
+          y: [2, 7],
+          opacity: [0, 1, 0],
+          scale: [0.6, 1.4, 0.4],
         }}
-        transition={{ duration: 0.5, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
       />
     </svg>
   );

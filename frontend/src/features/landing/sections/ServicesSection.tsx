@@ -288,7 +288,6 @@ const serviceIllustrations = [
 
 export function ServicesSection() {
   const containerRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const { currentLang, isNight } = useGlobalStore();
   const t = useTranslation()(currentLang);
@@ -320,51 +319,67 @@ export function ServicesSection() {
     <section 
       id="services" 
       ref={containerRef} 
-      className={`min-h-screen flex items-center justify-center px-0 sm:px-8 lg:px-24 py-24 transition-colors duration-700 ${
+      className={`py-28 lg:py-36 px-8 lg:px-12 xl:px-16 relative overflow-hidden transition-colors duration-700 ease-in-out ${
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
       }`}
     >
-      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-12 lg:gap-16 items-start lg:items-stretch">
+      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-16 lg:gap-20">
         
-        {/* Left Column: Fixed pre-title at top, centered headline/description/button */}
-        <div className="lg:w-[38%] w-full px-8 sm:px-0 flex flex-col items-start lg:self-stretch">
-          <div className="flex items-center gap-4 mb-6 sm:mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.services.step}</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">{t.services.badge}</span>
+        {/* Left Column: Heading, Subtitle & ALL SERVICES Underlined Action */}
+        <div className="lg:w-[38%] flex flex-col self-stretch">
+          {/* Step & Category Tag (Top aligned with right cards) */}
+          <div className="flex items-center gap-4 mb-6">
+            <span className="text-xs font-semibold tracking-widest text-brand-gray">
+              {t.services.step}
+            </span>
+            <span className="text-xs font-semibold tracking-widest uppercase">
+              {t.services.badge}
+            </span>
           </div>
-
-          <div ref={textRef} className="lg:my-auto flex flex-col items-start py-4 lg:py-0 w-full">
-            <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6 sm:mb-8">
-              {t.services.titleLine1}<br />
-              {t.services.titleLine2}
+          
+          {/* Main Content Group centered vertically in section */}
+          <div className="lg:my-auto flex flex-col items-start py-6 lg:py-0">
+            {/* Main Section Title */}
+            <h2 className={`text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.1] mb-6 tracking-tight ${
+              isNight ? 'text-white' : 'text-brand-dark'
+            }`}>
+              {t.services.titleLine1}<br />{t.services.titleLine2}
             </h2>
             
-            <p className={`text-base leading-relaxed mb-8 sm:mb-10 max-w-md ${
-              isNight ? 'text-brand-gray' : 'text-neutral-600'
-            }`}>
+            {/* Description Text */}
+            <p className="text-brand-gray text-base lg:text-[17px] leading-relaxed mb-8 lg:mb-10 max-w-md">
               {t.services.description}
             </p>
-            
-            <a 
-              href="#services" 
-              className={`text-xs font-bold uppercase tracking-widest border-b-2 pb-1 transition-colors flex items-center gap-2 ${
-                isNight 
-                  ? 'text-brand-yellow border-brand-yellow hover:text-white hover:border-white'
-                  : 'text-brand-dark border-brand-dark hover:text-brand-gray hover:border-brand-gray'
-              }`}
-            >
-              {t.services.exploreAll}
-              <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
+
+            {/* ALL SERVICES link directly below the description with prominent underline */}
+            <div>
+              <a
+                href="#services"
+                className={`group inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
+                  isNight 
+                    ? 'text-brand-yellow hover:text-white border-brand-yellow hover:border-white' 
+                    : 'text-brand-dark hover:text-brand-gray border-brand-dark hover:border-brand-gray'
+                }`}
+              >
+                <span>{t.services.exploreAll}</span>
+                <svg
+                  className="w-4 h-4 rtl:rotate-180 transform group-hover:translate-x-1.5 rtl:group-hover:-translate-x-1.5 transition-transform duration-300"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
           </div>
 
           <div className="hidden lg:block h-6 w-full" aria-hidden="true" />
         </div>
 
-        {/* Right Column: Monolithic Department Flip Board (Full width on mobile, rounded card on sm+) */}
-        <div ref={cardsRef} className="lg:w-[62%] w-full px-0 flex items-center justify-center self-stretch">
+        {/* Right Column: Monolithic Department Flip Board (Vertical 7-Department Cuboid Board) */}
+        <div ref={cardsRef} className="lg:w-[62%] w-full self-stretch flex items-center">
           <DepartmentFlipBoard />
         </div>
 
