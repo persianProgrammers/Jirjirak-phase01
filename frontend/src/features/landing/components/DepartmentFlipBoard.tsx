@@ -189,32 +189,162 @@ export function DepartmentFlipBoard() {
   const currentDept = DEPARTMENTS[currentIndex];
   const IconComponent = DEPARTMENT_ICONS[currentIndex];
 
-  // Whisper-Smooth, Lightweight Vertical Slide Animation
-  const slideVariants: Variants = {
+  // Natural directional mapping:
+  // When advancing to next slide (idx increases, dots move top-to-bottom),
+  // new content should arrive from top (y: -28) and exit towards bottom (y: 28),
+  // perfectly echoing the downward travel of the active dot!
+  const titleContainerVariants: Variants = {
+    enter: {
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.02,
+      },
+    },
+    center: {
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.04,
+      },
+    },
+    exit: {
+      transition: {
+        staggerChildren: 0.02,
+        staggerDirection: -1,
+      },
+    },
+  };
+
+  const wordVariants: Variants = {
     enter: (dir: number) => ({
-      y: dir > 0 ? -32 : 32,
+      y: dir > 0 ? -24 : 24, // Matches the dot navigation direction!
       opacity: 0,
-      scale: 0.98,
+      scale: 0.92,
+      filter: 'blur(4px)',
+    }),
+    center: {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)',
+      transition: {
+        type: 'spring',
+        stiffness: 260,
+        damping: 22,
+        mass: 0.7,
+      },
+    },
+    exit: (dir: number) => ({
+      y: dir > 0 ? 24 : -24,
+      opacity: 0,
+      scale: 0.94,
+      filter: 'blur(3px)',
+      transition: {
+        duration: 0.18,
+        ease: 'easeIn' as const,
+      },
+    }),
+  };
+
+  const descContainerVariants: Variants = {
+    enter: {
+      transition: {
+        staggerChildren: 0.025,
+        delayChildren: 0.08,
+      },
+    },
+    center: {
+      transition: {
+        staggerChildren: 0.025,
+        delayChildren: 0.1,
+      },
+    },
+    exit: {
+      transition: {
+        staggerChildren: 0.015,
+        staggerDirection: -1,
+      },
+    },
+  };
+
+  const descWordVariants: Variants = {
+    enter: (dir: number) => ({
+      y: dir > 0 ? -16 : 16,
+      opacity: 0,
+      filter: 'blur(3px)',
+    }),
+    center: {
+      y: 0,
+      opacity: 1,
+      filter: 'blur(0px)',
+      transition: {
+        type: 'spring',
+        stiffness: 220,
+        damping: 20,
+      },
+    },
+    exit: (dir: number) => ({
+      y: dir > 0 ? 16 : -16,
+      opacity: 0,
+      filter: 'blur(3px)',
+      transition: {
+        duration: 0.16,
+        ease: 'easeIn' as const,
+      },
+    }),
+  };
+
+  const iconVariants: Variants = {
+    enter: (dir: number) => ({
+      y: dir > 0 ? -28 : 28,
+      opacity: 0,
+      scale: 0.86,
+      rotate: dir > 0 ? -10 : 10,
+    }),
+    center: {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: {
+        y: { type: 'spring', stiffness: 260, damping: 22 },
+        scale: { type: 'spring', stiffness: 280, damping: 20 },
+        opacity: { duration: 0.32 },
+        rotate: { type: 'spring', stiffness: 220, damping: 20 },
+      },
+    },
+    exit: (dir: number) => ({
+      y: dir > 0 ? 28 : -28,
+      opacity: 0,
+      scale: 0.88,
+      rotate: dir > 0 ? 10 : -10,
+      transition: {
+        duration: 0.22,
+        ease: 'easeInOut' as const,
+      },
+    }),
+  };
+
+  const tagsVariants: Variants = {
+    enter: (dir: number) => ({
+      y: dir > 0 ? -16 : 16,
+      opacity: 0,
+      scale: 0.94,
     }),
     center: {
       y: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        y: { type: 'spring', stiffness: 240, damping: 26, mass: 0.75 },
-        opacity: { duration: 0.28, ease: 'easeOut' as const },
-        scale: { duration: 0.28, ease: 'easeOut' as const },
+        delay: 0.12,
+        y: { type: 'spring', stiffness: 220, damping: 24 },
+        opacity: { duration: 0.35 },
       },
     },
     exit: (dir: number) => ({
-      y: dir > 0 ? 32 : -32,
+      y: dir > 0 ? 16 : -16,
       opacity: 0,
-      scale: 0.98,
-      transition: {
-        y: { duration: 0.22, ease: 'easeIn' as const },
-        opacity: { duration: 0.18, ease: 'easeIn' as const },
-        scale: { duration: 0.2 },
-      },
+      scale: 0.95,
+      transition: { duration: 0.18, ease: 'easeIn' as const },
     }),
   };
 
@@ -240,9 +370,9 @@ export function DepartmentFlipBoard() {
         }}
       />
 
-      {/* Delicate Vertical Navigation Dots on the Vertical Edge */}
+      {/* Living Amoeba Cell Navigation Dots on the Vertical Edge */}
       <div 
-        className="absolute right-3.5 sm:right-5 rtl:right-auto rtl:left-3.5 sm:rtl:left-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-2 py-2 px-1 rounded-full transition-all"
+        className="absolute right-3.5 sm:right-5 rtl:right-auto rtl:left-3.5 sm:rtl:left-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-3 py-3 px-1.5 rounded-full transition-all"
         role="tablist"
         aria-label="Department Navigation"
       >
@@ -252,36 +382,85 @@ export function DepartmentFlipBoard() {
             <button
               key={dept.id}
               onClick={() => goToIndex(idx)}
-              className="group relative flex items-center justify-center p-0.5 cursor-pointer focus:outline-none"
+              className="group relative flex items-center justify-center p-1 cursor-pointer focus:outline-none"
               role="tab"
               aria-selected={isActive}
               aria-label={`Slide ${dept.number}: ${isFa ? dept.titleFa : dept.titleEn}`}
             >
-              {/* Dynamic Slim Pill Dot */}
-              <motion.div
-                layout
-                animate={{
-                  height: isActive ? 22 : 6,
-                  backgroundColor: isActive 
-                    ? '#fff083' 
-                    : isNight 
-                      ? 'rgba(255, 255, 255, 0.22)' 
-                      : 'rgba(0, 0, 0, 0.22)',
-                }}
-                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-                className={`w-1.5 rounded-full transition-all duration-200 ${
-                  isActive 
-                    ? 'shadow-[0_0_8px_rgba(255,240,131,0.5)]' 
-                    : 'group-hover:bg-brand-yellow/60'
-                }`}
-              />
+              {/* 2D Living Cell Dot / Amoeba Organic Morphing State */}
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                {/* Active Living Amoeba Cell (Translucent membrane, continuous organic deformation, no inner solid block) */}
+                <motion.div
+                  initial={false}
+                  animate={
+                    isActive
+                      ? {
+                          scale: [1, 1.25, 0.95, 1.18, 1],
+                          borderRadius: [
+                            '50% 50% 50% 50%',
+                            '62% 38% 68% 32% / 44% 65% 35% 56%',
+                            '41% 59% 33% 67% / 60% 38% 62% 40%',
+                            '58% 42% 64% 36% / 37% 58% 42% 63%',
+                            '50% 50% 50% 50%',
+                          ],
+                          rotate: [0, 45, 180, 290, 360],
+                          borderColor: '#fff083',
+                          backgroundColor: isNight 
+                            ? 'rgba(255, 240, 131, 0.18)' 
+                            : 'rgba(204, 192, 105, 0.22)',
+                          boxShadow: isNight
+                            ? [
+                                '0 0 8px rgba(255,240,131,0.5), inset 0 0 6px rgba(255,240,131,0.3)',
+                                '0 0 16px rgba(255,240,131,0.85), inset 0 0 9px rgba(255,240,131,0.45)',
+                                '0 0 10px rgba(255,240,131,0.55), inset 0 0 6px rgba(255,240,131,0.3)',
+                                '0 0 18px rgba(255,240,131,0.9), inset 0 0 10px rgba(255,240,131,0.5)',
+                                '0 0 8px rgba(255,240,131,0.5), inset 0 0 6px rgba(255,240,131,0.3)',
+                              ]
+                            : [
+                                '0 0 8px rgba(204,192,105,0.5), inset 0 0 5px rgba(204,192,105,0.3)',
+                                '0 0 14px rgba(204,192,105,0.8), inset 0 0 8px rgba(204,192,105,0.45)',
+                                '0 0 8px rgba(204,192,105,0.5), inset 0 0 5px rgba(204,192,105,0.3)',
+                                '0 0 15px rgba(204,192,105,0.85), inset 0 0 9px rgba(204,192,105,0.48)',
+                                '0 0 8px rgba(204,192,105,0.5), inset 0 0 5px rgba(204,192,105,0.3)',
+                              ],
+                        }
+                      : {
+                          scale: 1,
+                          borderRadius: '50%',
+                          rotate: 0,
+                          borderColor: isNight 
+                            ? 'rgba(255, 255, 255, 0.22)' 
+                            : 'rgba(0, 0, 0, 0.22)',
+                          backgroundColor: isNight 
+                            ? 'rgba(255, 255, 255, 0.08)' 
+                            : 'rgba(0, 0, 0, 0.08)',
+                          boxShadow: '0 0 0px rgba(0,0,0,0)',
+                        }
+                  }
+                  transition={
+                    isActive
+                      ? {
+                          duration: 3.4,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }
+                      : {
+                          duration: 0.55,
+                          ease: [0.22, 1, 0.36, 1], // Fluid deflating release from living back to dormant dot
+                        }
+                  }
+                  className={`w-3.5 h-3.5 border transition-colors ${
+                    !isActive ? 'group-hover:border-brand-yellow/80 group-hover:scale-110' : ''
+                  }`}
+                />
+              </div>
 
               {/* Tooltip on Hover */}
               <span className={`absolute ${
                 isFa 
                   ? 'left-full ml-2.5' 
                   : 'right-full mr-2.5'
-              } px-2 py-0.5 rounded text-[10px] font-mono font-medium tracking-wider uppercase whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 border shadow-md ${
+              } px-2 py-0.5 rounded text-[10px] font-mono font-medium tracking-wider uppercase whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 border shadow-md z-40 ${
                 isNight 
                   ? 'bg-brand-dark text-brand-yellow border-brand-surface-light' 
                   : 'bg-white text-brand-dark border-gray-200'
@@ -293,57 +472,110 @@ export function DepartmentFlipBoard() {
         })}
       </div>
 
-      {/* Main Single Container Stage (No nested cards, pure breathing room) */}
+      {/* Main Single Container Stage (Static Anchor Layout with Separator Firmly Anchored) */}
       <div className="w-full flex items-center justify-center px-4 sm:px-8 lg:px-10 py-7 relative z-10">
         <motion.div
           drag="y"
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={0.15}
           onDragEnd={handleDragEnd}
-          className="w-full flex items-center justify-center"
+          className="w-full max-w-xl flex flex-col items-center justify-center text-center"
         >
-          <AnimatePresence custom={direction} mode="wait">
-            <motion.div
-              key={currentDept.id}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className="w-full max-w-xl flex flex-col items-center justify-center text-center"
-            >
-              {/* 1. Handcrafted Animated Icon within Bespoke Polygonal Frame */}
-              <div className="relative mb-6 sm:mb-7 flex items-center justify-center">
+          {/* 1. Animated Bespoke Polygonal Frame & Handcrafted Icon */}
+          <div className="relative mb-5 sm:mb-6 flex items-center justify-center min-h-[96px]">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={`icon-${currentDept.id}`}
+                custom={direction}
+                variants={iconVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+              >
                 <DepartmentPolygonalFrame departmentIndex={currentIndex} isNight={isNight}>
                   <IconComponent isNight={isNight} className="w-full h-full" />
                 </DepartmentPolygonalFrame>
-              </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-              {/* 2. Refined, Delicate Title (Not oversized) */}
-              <h3 className={`text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-center leading-snug transition-colors duration-300 ${
-                isNight ? 'text-white' : 'text-brand-dark'
-              }`}>
-                {isFa ? currentDept.titleFa : currentDept.titleEn}
-              </h3>
+          {/* 2. Distinctly Animated Title Header with Word-by-Word Kinetic Animation */}
+          <div className="min-h-[42px] sm:min-h-[48px] flex items-center justify-center w-full overflow-hidden">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.h3
+                key={`title-${currentDept.id}`}
+                custom={direction}
+                variants={titleContainerVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className={`text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-center leading-snug flex flex-wrap items-center justify-center gap-x-2 transition-colors duration-300 ${
+                  isNight ? 'text-white' : 'text-brand-dark'
+                }`}
+              >
+                {(isFa ? currentDept.titleFa : currentDept.titleEn).split(' ').map((word, wordIdx) => (
+                  <motion.span
+                    key={`w-${wordIdx}`}
+                    custom={direction}
+                    variants={wordVariants}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.h3>
+            </AnimatePresence>
+          </div>
 
-              {/* 3. Thin, Delicate Divider Line below Title (Light Gray & Generously Sized) */}
-              <div className="flex items-center justify-center my-4 sm:my-5 w-full">
-                <div className={`h-[1px] w-64 sm:w-80 md:w-96 max-w-md rounded-full ${
-                  isNight 
-                    ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent' 
-                    : 'bg-gradient-to-r from-transparent via-neutral-300 to-transparent'
-                }`} />
-              </div>
+          {/* 3. STATIC / PERMANENT DIVIDER LINE (Remains completely still and rock-solid during transitions) */}
+          <div className="flex items-center justify-center my-4 sm:my-5 w-full pointer-events-none">
+            <div className={`h-[1px] w-64 sm:w-80 md:w-96 max-w-md rounded-full transition-colors duration-500 ${
+              isNight 
+                ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent' 
+                : 'bg-gradient-to-r from-transparent via-neutral-300 to-transparent'
+            }`} />
+          </div>
 
-              {/* 4. Elegant, Legible Description */}
-              <p className={`text-sm sm:text-[15px] leading-relaxed mb-6 max-w-lg mx-auto text-center font-normal transition-colors duration-300 ${
-                isNight ? 'text-brand-gray/90' : 'text-neutral-600'
-              }`}>
-                {isFa ? currentDept.subtitleFa : currentDept.subtitleEn}
-              </p>
+          {/* 4. Distinctly Animated Description Paragraph with Word-by-Word Staggered Kinetic Timing */}
+          <div className="min-h-[56px] sm:min-h-[64px] flex items-center justify-center w-full overflow-hidden">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.p
+                key={`desc-${currentDept.id}`}
+                custom={direction}
+                variants={descContainerVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className={`text-sm sm:text-[15px] leading-relaxed max-w-lg mx-auto text-center font-normal flex flex-wrap items-center justify-center gap-x-1.5 transition-colors duration-300 ${
+                  isNight ? 'text-brand-gray/90' : 'text-neutral-600'
+                }`}
+              >
+                {(isFa ? currentDept.subtitleFa : currentDept.subtitleEn).split(' ').map((word, wordIdx) => (
+                  <motion.span
+                    key={`dw-${wordIdx}`}
+                    custom={direction}
+                    variants={descWordVariants}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.p>
+            </AnimatePresence>
+          </div>
 
-              {/* 5. Delicate Activity Tags (Clean, Minimal Pill Badges) */}
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-lg mx-auto">
+          {/* 5. Distinctly Animated Activity Tags (Clean, Minimal Pill Badges) */}
+          <div className="min-h-[46px] flex items-center justify-center w-full mt-4 sm:mt-5 overflow-hidden">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={`tags-${currentDept.id}`}
+                custom={direction}
+                variants={tagsVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-lg mx-auto"
+              >
                 {(isFa ? currentDept.tagsFa : currentDept.tagsEn).map((tag, idx) => (
                   <span
                     key={idx}
@@ -356,10 +588,9 @@ export function DepartmentFlipBoard() {
                     {tag}
                   </span>
                 ))}
-              </div>
-
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </motion.div>
       </div>
     </div>
