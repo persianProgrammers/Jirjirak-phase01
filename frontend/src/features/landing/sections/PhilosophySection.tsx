@@ -29,6 +29,7 @@ export function PhilosophySection() {
 
   return (
     <section 
+      id="philosophy"
       ref={containerRef} 
       className={`py-32 px-8 lg:px-12 xl:px-16 overflow-hidden transition-colors duration-700 ease-in-out ${
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
@@ -40,7 +41,7 @@ export function PhilosophySection() {
         <div className="md:w-1/2 flex flex-col items-start z-10 lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.philosophy.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>{t.philosophy.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.philosophy.badge}</span>
           </div>
           
@@ -63,7 +64,7 @@ export function PhilosophySection() {
               className={`text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
                 isNight 
                   ? 'text-brand-yellow hover:text-brand-light' 
-                  : 'text-brand-dark hover:text-brand-gray'
+                  : 'text-[#b3a85c] hover:text-brand-dark'
               }`}
             >
               {t.philosophy.learnMore}

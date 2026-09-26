@@ -37,7 +37,7 @@ export function ContactSection() {
         <div className="lg:w-1/3 flex flex-col items-start lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.contact.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>{t.contact.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.contact.badge}</span>
           </div>
           
@@ -53,7 +53,11 @@ export function ContactSection() {
               {t.contact.description}
             </p>
 
-            <button className="px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2">
+            <button className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
+              isNight
+                ? 'bg-brand-yellow text-brand-dark hover:bg-white hover:text-brand-dark'
+                : 'bg-[#b3a85c] text-brand-dark hover:bg-brand-dark hover:text-white'
+            }`}>
               {t.contact.startConversation}
               <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -79,11 +83,11 @@ export function ContactSection() {
                >
                  <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
                    selectedInterest === idx 
-                     ? isNight ? 'border-brand-yellow' : 'border-brand-dark' 
-                     : isNight ? 'border-gray-600 group-hover:border-brand-yellow' : 'border-gray-300 group-hover:border-brand-dark'
+                     ? isNight ? 'border-brand-yellow' : 'border-[#b3a85c]' 
+                     : isNight ? 'border-gray-600 group-hover:border-brand-yellow' : 'border-gray-300 group-hover:border-[#b3a85c]'
                  }`}>
                    {selectedInterest === idx && (
-                     <div className={`w-2 h-2 rounded-full ${isNight ? 'bg-brand-yellow' : 'bg-brand-dark'}`}></div>
+                     <div className={`w-2 h-2 rounded-full ${isNight ? 'bg-brand-yellow' : 'bg-[#b3a85c]'}`}></div>
                    )}
                  </div>
                  <span className="text-sm font-medium">{interest}</span>
@@ -100,7 +104,7 @@ export function ContactSection() {
                  className={`w-full h-32 p-4 border rounded-lg text-sm resize-none focus:outline-none transition-colors ${
                    isNight 
                      ? 'bg-brand-surface border-white/10 text-white focus:border-brand-yellow' 
-                     : 'bg-gray-50 border-gray-200 text-brand-dark focus:border-brand-dark'
+                     : 'bg-gray-50 border-gray-200 text-brand-dark focus:border-[#b3a85c]'
                  }`}
                ></textarea>
              </div>
@@ -111,9 +115,13 @@ export function ContactSection() {
                  {/* Custom Slider Track */}
                  <div className={`w-full h-1 rounded-full relative ${isNight ? 'bg-white/10' : 'bg-gray-200'}`}>
                    {/* Active Track */}
-                   <div className="absolute left-0 rtl:left-auto rtl:right-0 top-0 h-full bg-brand-yellow w-1/3 rounded-full"></div>
+                   <div className={`absolute left-0 rtl:left-auto rtl:right-0 top-0 h-full w-1/3 rounded-full ${
+                     isNight ? 'bg-brand-yellow' : 'bg-[#b3a85c]'
+                   }`}></div>
                    {/* Thumb */}
-                   <div className="absolute left-1/3 rtl:left-auto rtl:right-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2 w-4 h-4 bg-brand-dark rounded-full border-2 border-brand-yellow shadow cursor-pointer"></div>
+                   <div className={`absolute left-1/3 rtl:left-auto rtl:right-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2 w-4 h-4 rounded-full border-2 shadow cursor-pointer ${
+                     isNight ? 'bg-brand-dark border-brand-yellow' : 'bg-white border-[#b3a85c]'
+                   }`}></div>
                  </div>
                  <div className="flex justify-between mt-3 text-[10px] font-bold text-brand-gray uppercase tracking-widest">
                    <span>{t.contact.small}</span>
@@ -122,7 +130,11 @@ export function ContactSection() {
                </div>
              </div>
 
-             <button className="px-8 lg:px-12 xl:px-16 py-4 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center justify-center gap-2 self-start w-full md:w-auto">
+             <button className={`px-8 lg:px-12 xl:px-16 py-4 rounded-full text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 self-start w-full md:w-auto ${
+               isNight
+                 ? 'bg-brand-yellow text-brand-dark hover:bg-white hover:text-brand-dark'
+                 : 'bg-[#b3a85c] text-brand-dark hover:bg-brand-dark hover:text-white'
+             }`}>
                {t.contact.sendBtn}
                <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                  <path d="M5 12h14M12 5l7 7-7 7"/>

@@ -35,7 +35,7 @@ export function JournalSection() {
         <div className="md:w-1/3 flex flex-col items-start lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.journal.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-[#b3a85c]' : 'text-brand-yellow'}`}>{t.journal.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.journal.badge}</span>
           </div>
           
@@ -55,7 +55,7 @@ export function JournalSection() {
               href="/journal" 
               className={`text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
                 isNight 
-                  ? 'text-brand-dark hover:text-brand-gray' 
+                  ? 'text-[#b3a85c] hover:text-brand-dark' 
                   : 'text-brand-yellow hover:text-brand-light'
               }`}
             >
@@ -79,10 +79,10 @@ export function JournalSection() {
                 onClick={() => setActiveCategory(cat.key)}
                 className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors border ${
                   activeCategory === cat.key 
-                    ? 'bg-brand-yellow text-brand-dark border-brand-yellow' 
+                    ? (isNight ? 'bg-[#b3a85c] text-brand-dark border-[#b3a85c]' : 'bg-brand-yellow text-brand-dark border-brand-yellow') 
                     : isNight 
-                      ? 'bg-transparent text-brand-gray border-gray-300 hover:border-brand-dark'
-                      : 'bg-transparent text-brand-gray border-brand-surface-light hover:border-brand-gray'
+                      ? 'bg-transparent text-brand-gray border-gray-300 hover:border-[#b3a85c] hover:text-[#b3a85c]'
+                      : 'bg-transparent text-brand-gray border-brand-surface-light hover:border-brand-yellow hover:text-brand-yellow'
                 }`}
               >
                 {cat.label}
@@ -110,7 +110,7 @@ export function JournalSection() {
                 {/* Info */}
                 <div className="flex-1">
                   <h3 className={`text-xl md:text-2xl font-bold mb-3 md:mb-4 transition-colors ${
-                    isNight ? 'group-hover:text-neutral-900' : 'group-hover:text-brand-yellow'
+                    isNight ? 'group-hover:text-[#b3a85c]' : 'group-hover:text-brand-yellow'
                   }`}>
                     {article.title}
                   </h3>

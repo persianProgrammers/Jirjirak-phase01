@@ -45,7 +45,7 @@ export function CaseStudySection() {
         <div className="lg:w-1/4 flex flex-col relative z-10 lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.caseStudy.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>{t.caseStudy.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.caseStudy.badge}</span>
           </div>
           
@@ -64,7 +64,9 @@ export function CaseStudySection() {
                     <div className="w-1.5 h-1.5 rounded-full bg-brand-gray"></div>
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-bold tracking-widest text-brand-yellow uppercase mb-2">{step.title}</h4>
+                    <h4 className={`text-[10px] font-bold tracking-widest uppercase mb-2 ${
+                      isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'
+                    }`}>{step.title}</h4>
                     <p className="text-xs text-brand-gray leading-relaxed pr-4 rtl:pr-0 rtl:pl-4">{step.desc}</p>
                   </div>
                 </div>

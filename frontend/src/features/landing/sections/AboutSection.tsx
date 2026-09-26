@@ -41,7 +41,7 @@ export function AboutSection() {
         <div className="lg:col-span-4 flex flex-col items-start lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">{t.about.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-[#b3a85c]' : 'text-brand-yellow'}`}>{t.about.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.about.badge}</span>
           </div>
           
@@ -61,7 +61,7 @@ export function AboutSection() {
               href="#about" 
               className={`text-xs font-bold uppercase tracking-widest border-b-2 pb-1 transition-colors flex items-center gap-2 ${
                 isNight 
-                  ? 'text-brand-dark border-brand-dark hover:text-brand-gray hover:border-brand-gray' 
+                  ? 'text-[#b3a85c] border-[#b3a85c] hover:text-brand-dark hover:border-brand-dark' 
                   : 'text-brand-yellow border-brand-yellow hover:text-white hover:border-white'
               }`}
             >

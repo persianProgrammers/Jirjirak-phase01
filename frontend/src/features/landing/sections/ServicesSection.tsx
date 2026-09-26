@@ -329,7 +329,7 @@ export function ServicesSection() {
         <div className="lg:w-[38%] flex flex-col self-stretch">
           {/* Step & Category Tag (Top aligned with right cards) */}
           <div className="flex items-center gap-4 mb-6">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>
               {t.services.step}
             </span>
             <span className="text-xs font-semibold tracking-widest uppercase">
@@ -358,7 +358,7 @@ export function ServicesSection() {
                 className={`group inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
                   isNight 
                     ? 'text-brand-yellow hover:text-white border-brand-yellow hover:border-white' 
-                    : 'text-brand-dark hover:text-brand-gray border-brand-dark hover:border-brand-gray'
+                    : 'text-[#b3a85c] hover:text-brand-dark border-[#b3a85c] hover:border-brand-dark'
                 }`}
               >
                 <span>{t.services.exploreAll}</span>

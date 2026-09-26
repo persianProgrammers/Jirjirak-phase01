@@ -35,7 +35,7 @@ interface GlobalState {
 export const useGlobalStore = create<GlobalState>((set, get) => ({
   isWorldLoaded: false,
   setWorldLoaded: (loaded) => set({ isWorldLoaded: loaded }),
-  
+
   // Theme
   isNight: true,
   iconNightPreview: true,

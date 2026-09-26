@@ -4,14 +4,16 @@ import { useTranslation } from '../../i18n/translations';
 import { AnimatedJirjirakLogo } from '../ui/AnimatedJirjirakLogo';
 
 export function Footer() {
-  const { currentLang } = useGlobalStore();
+  const { currentLang, isNight } = useGlobalStore();
   const t = useTranslation()(currentLang);
 
   return (
-    <footer className="bg-brand-light text-brand-dark px-8 lg:px-12 xl:px-16 py-12 border-t border-gray-200">
+    <footer className={`px-8 lg:px-12 xl:px-16 py-12 border-t transition-colors duration-500 ${
+      isNight ? 'bg-brand-dark text-brand-light border-white/10' : 'bg-brand-light text-brand-dark border-neutral-300'
+    }`}>
       <div className="max-w-[1600px] mx-auto w-full flex flex-col md:flex-row justify-between items-center text-xs font-medium uppercase tracking-wider gap-6 md:gap-4">
         <Link to="/" className="flex items-center group">
-          <AnimatedJirjirakLogo variant="footer" className="h-8 md:h-10 w-auto" />
+          <AnimatedJirjirakLogo variant={isNight ? 'footer' : 'header'} className="h-8 md:h-10 w-auto" />
         </Link>
         
         <nav className="flex flex-wrap justify-center gap-6">

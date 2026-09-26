@@ -45,7 +45,7 @@ export function WorldSection() {
         <div className="lg:col-span-5 flex flex-col items-start max-w-xl w-full lg:pr-8 rtl:lg:pr-0 rtl:lg:pl-8 lg:self-stretch">
           {/* Pre-title / Step Badge (Pinned at top) */}
           <div className="flex items-center gap-4 mb-6">
-            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-gray' : 'text-brand-gray'}`}>{t.world.step}</span>
+            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-[#b3a85c]' : 'text-brand-yellow'}`}>{t.world.step}</span>
             <span className="text-xs font-semibold tracking-widest uppercase">{t.world.badge}</span>
           </div>
           
@@ -61,8 +61,10 @@ export function WorldSection() {
             </p>
             
             {/* Desktop Button - Hidden on mobile */}
-            <button className={`hidden lg:flex px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors items-center gap-2 ${
-              !isNight ? 'hover:bg-white hover:text-brand-dark' : ''
+            <button className={`hidden lg:flex px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors items-center gap-2 ${
+              isNight 
+                ? 'bg-[#b3a85c] text-brand-dark hover:bg-brand-dark hover:text-white' 
+                : 'bg-brand-yellow text-brand-dark hover:bg-white hover:text-brand-dark'
             }`}>
               {t.world.enterWorld}
               <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -81,8 +83,10 @@ export function WorldSection() {
 
         {/* Mobile Button - Displayed directly below the image on mobile screens */}
         <div className="flex lg:hidden w-full justify-start mt-4">
-          <button className={`px-6 py-3 bg-brand-yellow text-brand-dark rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-dark hover:text-brand-yellow transition-colors flex items-center gap-2 ${
-            !isNight ? 'hover:bg-white hover:text-brand-dark' : ''
+          <button className={`px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2 ${
+            isNight 
+              ? 'bg-[#b3a85c] text-brand-dark hover:bg-brand-dark hover:text-white' 
+              : 'bg-brand-yellow text-brand-dark hover:bg-white hover:text-brand-dark'
           }`}>
             {t.world.enterWorld}
             <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

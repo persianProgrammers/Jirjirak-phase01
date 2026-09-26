@@ -22,15 +22,6 @@ export function HeroSection() {
   /* =========================================================================
      [RESERVED FOR FUTURE SEASONAL FEATURE]
      برگ‌های پاییزی، افرا و جینکو برای ویژگی تم فصول در آینده ذخیره شده‌اند:
-     
-     const leavesCount = 15;
-     const leaves = useMemo(() => Array.from({ length: leavesCount }), []);
-     const leavesRef = useRef<(HTMLDivElement | null)[]>([]);
-     
-     // Leaf variants:
-     // - Ginkgo Biloba (url(#ginkgoGrad))
-     // - Autumn Maple (url(#mapleGrad))
-     // - Golden Elm (url(#birchGrad))
      ========================================================================= */
 
   const [isDayImageLoaded, setIsDayImageLoaded] = useState(false);
@@ -129,6 +120,7 @@ export function HeroSection() {
 
   return (
     <section 
+      id="hero"
       ref={containerRef} 
       className={`relative px-8 lg:px-12 xl:px-16 overflow-hidden lg:h-screen lg:pt-24 lg:pb-12 transition-colors duration-700 ease-in-out ${
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
@@ -193,9 +185,7 @@ export function HeroSection() {
           }`}>
             {t.hero.titleLine1}<br />
             {t.hero.titleLine2}<br />
-            <span className={`transition-colors duration-700 ${
-              isNight ? 'text-brand-yellow' : 'text-[#a38600]'
-            }`}>
+            <span className={isNight ? "text-brand-yellow" : "text-[#b3a85c]"}>
               {t.hero.titleLine3}
             </span>
           </h1>
@@ -207,8 +197,12 @@ export function HeroSection() {
           </p>
           
           <button onClick={() => navigate('/world')} className="group flex items-center gap-4 hover:opacity-80 transition-opacity">
-            <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-brand-yellow flex items-center justify-center text-brand-dark relative shadow-md">
-              <span className="absolute inset-0 rounded-full border border-brand-yellow scale-150 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500"></span>
+            <div className={`w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center relative shadow-md transition-colors ${
+              isNight ? 'bg-brand-yellow text-brand-dark' : 'bg-[#b3a85c] text-brand-dark'
+            }`}>
+              <span className={`absolute inset-0 rounded-full border scale-150 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ${
+                isNight ? 'border-brand-yellow' : 'border-[#b3a85c]'
+              }`}></span>
               <svg className="w-6 h-6 lg:w-7 lg:h-7 ml-1 lg:ml-1.5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
@@ -230,7 +224,7 @@ export function HeroSection() {
           >
             {/* Minimalist cricket/bug antennae icon */}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`transition-colors duration-700 ${
-              isNight ? 'text-brand-yellow' : 'text-brand-dark'
+              isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'
             }`}>
               <path d="M12 21V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               <path d="M12 11C12 11 8 6 6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="animate-[antennal_2s_ease-in-out_infinite] origin-bottom"/>
@@ -238,7 +232,7 @@ export function HeroSection() {
               <circle cx="12" cy="11" r="2" fill="currentColor"/>
             </svg>
             <span className={`text-[8px] font-bold tracking-[0.2em] uppercase transition-colors duration-700 mt-1 ${
-              isNight ? 'text-brand-gray group-hover:text-brand-yellow' : 'text-brand-dark/60 group-hover:text-brand-dark'
+              isNight ? 'text-brand-gray group-hover:text-brand-yellow' : 'text-brand-dark/60 group-hover:text-[#b3a85c]'
             }`}>
               {t.hero.hopDown}
             </span>
@@ -432,7 +426,7 @@ export function HeroSection() {
                           className={`group relative w-10 h-10 backdrop-blur-md border flex items-center justify-center rounded-[4px] transition-all duration-300 hover:scale-110 active:scale-95 shadow-md ${
                             isNight 
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-white hover:bg-brand-yellow hover:border-brand-yellow hover:text-brand-dark' 
-                              : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-brand-dark hover:text-brand-light hover:border-brand-dark'
+                              : 'bg-brand-light/90 border-[#b3a85c]/30 text-brand-dark hover:bg-[#b3a85c] hover:text-brand-dark hover:border-[#b3a85c]'
                           }`} 
                           aria-label={t.hero.zoomIn}
                         >
@@ -445,7 +439,7 @@ export function HeroSection() {
                           className={`group relative w-10 h-10 backdrop-blur-md border flex items-center justify-center rounded-[4px] transition-all duration-300 hover:scale-110 active:scale-95 shadow-md ${
                             isNight 
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-white hover:bg-brand-yellow hover:border-brand-yellow hover:text-brand-dark' 
-                              : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-brand-dark hover:text-brand-light hover:border-brand-dark'
+                              : 'bg-brand-light/90 border-[#b3a85c]/30 text-brand-dark hover:bg-[#b3a85c] hover:text-brand-dark hover:border-[#b3a85c]'
                           }`} 
                           aria-label={t.hero.zoomOut}
                         >
@@ -454,14 +448,14 @@ export function HeroSection() {
                           </svg>
                         </button>
                         
-                        <div className={`w-6 h-[1px] mx-auto my-1 ${isNight ? 'bg-brand-yellow/20' : 'bg-brand-dark/20'}`}></div>
+                        <div className={`w-6 h-[1px] mx-auto my-1 ${isNight ? 'bg-brand-yellow/20' : 'bg-[#b3a85c]/20'}`}></div>
                         
                         <button 
                           onClick={() => { resetTransform(); setIsMapLocked(true); }} 
                           className={`group relative w-10 h-10 backdrop-blur-md border flex items-center justify-center rounded-[4px] transition-all duration-300 hover:scale-110 active:scale-95 shadow-md ${
                             isNight 
                               ? 'bg-brand-dark/90 border-brand-yellow/30 text-brand-yellow hover:bg-red-500 hover:border-red-500 hover:text-white' 
-                              : 'bg-brand-light/90 border-brand-dark/25 text-brand-dark hover:bg-red-500 hover:border-red-500 hover:text-white'
+                              : 'bg-brand-light/90 border-brand-dark/25 text-[#b3a85c] hover:bg-red-500 hover:border-red-500 hover:text-white'
                           }`} 
                           aria-label={t.hero.lockMap}
                         >
@@ -482,7 +476,7 @@ export function HeroSection() {
                 isNight ? 'bg-brand-dark/60 border-white/5' : 'bg-brand-light/90 border-brand-dark/10 shadow-sm'
               }`}>
                 <div className={`flex items-center justify-center gap-2 mb-0.5 transition-colors duration-700 ${
-                  isNight ? 'text-brand-yellow' : 'text-brand-dark font-bold'
+                  isNight ? 'text-brand-yellow' : 'text-[#b3a85c] font-bold'
                 }`}>
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />

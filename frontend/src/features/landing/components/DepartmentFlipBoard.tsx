@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, type Variants } from 'motion/react';
 import { useGlobalStore } from '../../../stores/globalStore';
-import { DEPARTMENT_ANIMATED_ICONS, DepartmentPolygonalFrame } from './DepartmentAnimatedIcons';
 
 export interface DepartmentItem {
   id: string;
@@ -103,8 +102,6 @@ const DEPARTMENTS: DepartmentItem[] = [
   },
 ];
 
-const DEPARTMENT_ICONS = DEPARTMENT_ANIMATED_ICONS;
-
 export function DepartmentFlipBoard() {
   const { currentLang, isNight } = useGlobalStore();
   const isFa = currentLang === 'FA';
@@ -187,7 +184,6 @@ export function DepartmentFlipBoard() {
   };
 
   const currentDept = DEPARTMENTS[currentIndex];
-  const IconComponent = DEPARTMENT_ICONS[currentIndex];
 
   // Natural directional mapping:
   // When advancing to next slide (idx increases, dots move top-to-bottom),
@@ -289,37 +285,6 @@ export function DepartmentFlipBoard() {
       transition: {
         duration: 0.16,
         ease: 'easeIn' as const,
-      },
-    }),
-  };
-
-  const iconVariants: Variants = {
-    enter: (dir: number) => ({
-      y: dir > 0 ? -28 : 28,
-      opacity: 0,
-      scale: 0.86,
-      rotate: dir > 0 ? -10 : 10,
-    }),
-    center: {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      rotate: 0,
-      transition: {
-        y: { type: 'spring', stiffness: 260, damping: 22 },
-        scale: { type: 'spring', stiffness: 280, damping: 20 },
-        opacity: { duration: 0.32 },
-        rotate: { type: 'spring', stiffness: 220, damping: 20 },
-      },
-    },
-    exit: (dir: number) => ({
-      y: dir > 0 ? 28 : -28,
-      opacity: 0,
-      scale: 0.88,
-      rotate: dir > 0 ? 10 : -10,
-      transition: {
-        duration: 0.22,
-        ease: 'easeInOut' as const,
       },
     }),
   };
@@ -450,7 +415,7 @@ export function DepartmentFlipBoard() {
                         }
                   }
                   className={`w-3.5 h-3.5 border transition-colors ${
-                    !isActive ? 'group-hover:border-brand-yellow/80 group-hover:scale-110' : ''
+                    !isActive ? (isNight ? 'group-hover:border-brand-yellow/80 group-hover:scale-110' : 'group-hover:border-[#b3a85c]/80 group-hover:scale-110') : ''
                   }`}
                 />
               </div>
@@ -463,7 +428,7 @@ export function DepartmentFlipBoard() {
               } px-2 py-0.5 rounded text-[10px] font-mono font-medium tracking-wider uppercase whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 border shadow-md z-40 ${
                 isNight 
                   ? 'bg-brand-dark text-brand-yellow border-brand-surface-light' 
-                  : 'bg-white text-brand-dark border-gray-200'
+                  : 'bg-white text-[#b3a85c] border-gray-200'
               }`}>
                 {dept.number} • {isFa ? dept.titleFa : dept.titleEn}
               </span>
@@ -481,25 +446,7 @@ export function DepartmentFlipBoard() {
           onDragEnd={handleDragEnd}
           className="w-full max-w-xl flex flex-col items-center justify-center text-center"
         >
-          {/* 1. Animated Bespoke Polygonal Frame & Handcrafted Icon */}
-          <div className="relative mb-5 sm:mb-6 flex items-center justify-center min-h-[96px]">
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.div
-                key={`icon-${currentDept.id}`}
-                custom={direction}
-                variants={iconVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-              >
-                <DepartmentPolygonalFrame departmentIndex={currentIndex} isNight={isNight}>
-                  <IconComponent isNight={isNight} className="w-full h-full" />
-                </DepartmentPolygonalFrame>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* 2. Distinctly Animated Title Header with Word-by-Word Kinetic Animation */}
+          {/* Distinctly Animated Title Header with Word-by-Word Kinetic Animation */}
           <div className="min-h-[42px] sm:min-h-[48px] flex items-center justify-center w-full overflow-hidden">
             <AnimatePresence custom={direction} mode="wait">
               <motion.h3
@@ -582,7 +529,7 @@ export function DepartmentFlipBoard() {
                     className={`px-3.5 py-1.5 rounded-full text-xs font-normal tracking-normal border transition-all duration-200 text-center ${
                       isNight 
                         ? 'bg-brand-surface-light/40 border-white/[0.08] text-brand-light/90 hover:border-brand-yellow/40 hover:text-brand-yellow' 
-                        : 'bg-neutral-50 border-gray-200 text-neutral-700 hover:border-brand-yellow-dark hover:text-brand-dark'
+                        : 'bg-neutral-50 border-gray-200 text-neutral-700 hover:border-[#b3a85c] hover:text-[#b3a85c]'
                     }`}
                   >
                     {tag}

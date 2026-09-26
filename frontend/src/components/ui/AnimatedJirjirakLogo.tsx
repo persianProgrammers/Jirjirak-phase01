@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 export interface AnimatedJirjirakLogoProps {
   className?: string;
   variant?: 'header' | 'footer';
+  tone?: 'dark' | 'light';
   /**
    * اگر true باشد، بال می‌زند (مانند پرده ترنزیشن).
    * اگر false یا تعریف‌نشده باشد، با هاور ماوس شروع به بال زدن در لوپ بی‌نهایت می‌کند و با خروج ماوس متوقف می‌شود.
@@ -37,11 +38,21 @@ export interface AnimatedJirjirakLogoProps {
 export function AnimatedJirjirakLogo({ 
   className = "h-16 md:h-20 lg:h-24 w-auto",
   variant = 'header',
+  tone,
   alwaysAnimate = false,
   startDelayMs = 0
 }: AnimatedJirjirakLogoProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [initialPlay, setInitialPlay] = useState(true);
   const [delayElapsed, setDelayElapsed] = useState(startDelayMs <= 0);
+
+  // اجرای یک‌باره انیمیشن در هنگام لود سایت به مدت ۱.۲ ثانیه (یک چرخه کامل)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialPlay(false);
+    }, 1250);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (startDelayMs <= 0) {
@@ -55,22 +66,23 @@ export function AnimatedJirjirakLogo({
     return () => clearTimeout(timer);
   }, [startDelayMs]);
 
-  // انیمیشن زمانی فعال است که:
-  // ۱. در حالت هاور باشد (هاور تاخیر ندارد و درجا شروع می‌شود)
-  // ۲. یا در حالت alwaysAnimate باشد و زمان تاخیر تعیین‌شده (مثلا ۱ ثانیه پرده) سپری شده باشد
-  const shouldAnimate = isHovered || (alwaysAnimate && delayElapsed);
+  // انیمیشن فعال است اگر:
+  // ۱. همیشه متحرک باشد (مانند پرده ترنزیشن)
+  // ۲. هنگام لود اولیه برای بار اول (یک بار اجرا شده و ساکن می‌شود)
+  // ۳. کاربر روی لوگو هاور کرده باشد (بدون تاخیر درجا آغاز می‌شود)
+  const shouldAnimate = alwaysAnimate ? delayElapsed : (initialPlay || isHovered);
 
-  // تقسیم‌بندی زمانی کل چرخه ۲.۴ ثانیه‌ای:
-  // جیر ۱ (۲ رفت‌وبرگشت سریع) -> مکث ۳ صدم ثانیه -> جیر ۲ (۲ رفت‌وبرگشت سریع) -> سکوت -> جیر ۱ -> جیر ۲ -> سکوت طولانی
-  const keyTimes = "0; 0.00833; 0.01667; 0.025; 0.03333; 0.04583; 0.05417; 0.0625; 0.07083; 0.07917; 0.27083; 0.27917; 0.2875; 0.29583; 0.30417; 0.31667; 0.325; 0.33333; 0.34167; 0.35; 1";
+  // ریتم جیرجیرک ارگانیک و فوری (بدون وقفه مرده در ابتدای هاور):
+  // چرخه ۱.۲ ثانیه‌ای: بال‌زدن برق‌آسا و پرانرژی بلافاصله در ۳۰ میلی‌ثانیه اول
+  const keyTimes = "0; 0.025; 0.050; 0.075; 0.100; 0.125; 0.150; 0.175; 0.200; 0.283; 0.308; 0.333; 0.358; 0.383; 0.408; 0.433; 0.458; 0.483; 1";
 
-  // ۱. بال عقب (خاکستری): زاویه -۶.۵ درجه حول مفصل قرمز رنگ (112, 292)
+  // ۱. بال عقب (خاکستری): زاویه -۷.۵ درجه حول مفصل ثابت (112, 292)
   const backWingValues = 
-    "0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292; -6.5 112 292; 0 112 292; -6.5 112 292; 0 112 292; 0 112 292";
+    "0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; 0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; -7.5 112 292; 0 112 292; 0 112 292";
 
-  // ۲. بال جلو (زرد در هدر / مشکی در فوتر): زاویه +۷.۰ درجه حول مفصل قرمز رنگ (147, 290)
+  // ۲. بال جلو (زرد در هدر / مشکی در فوتر): زاویه +۸.۰ درجه حول مفصل ثابت (147, 290)
   const frontWingValues = 
-    "0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290; 7 147 290; 0 147 290; 7 147 290; 0 147 290; 0 147 290";
+    "0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 8 147 290; 0 147 290; 0 147 290";
 
   // رنگ‌بندی بال‌ها متناسب با هدر یا فوتر:
   const backFill = "#e9e9e9";
@@ -111,11 +123,12 @@ export function AnimatedJirjirakLogo({
         />
         {shouldAnimate && (
           <animateTransform
+            key={isHovered ? 'hover' : (initialPlay ? 'init' : 'always')}
             attributeName="transform"
             type="rotate"
             values={backWingValues}
             keyTimes={keyTimes}
-            dur="2.4s"
+            dur="1.2s"
             repeatCount="indefinite"
           />
         )}
@@ -136,11 +149,12 @@ export function AnimatedJirjirakLogo({
         />
         {shouldAnimate && (
           <animateTransform
+            key={isHovered ? 'hover' : (initialPlay ? 'init' : 'always')}
             attributeName="transform"
             type="rotate"
             values={frontWingValues}
             keyTimes={keyTimes}
-            dur="2.4s"
+            dur="1.2s"
             repeatCount="indefinite"
           />
         )}
