@@ -1,124 +1,281 @@
-import { useRef, useEffect } from 'react';
-import { gsap, ScrollTrigger } from '../../../animations/gsap';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, type Variants } from 'motion/react';
+import { useGlobalStore } from '../../../stores/globalStore';
+import { useTranslation } from '../../../i18n/translations';
+import { ProjectItem } from '../components/featured-models/types';
+import { KineticBladesModel } from '../components/featured-models/KineticBladesModel';
+
+// Direct Vite asset imports - guarantees bundled and resolved paths in dev and prod
+import toyooranImg from '@/src/assets/images/projects/project_toyooran.png';
+import kafiImg from '@/src/assets/images/projects/project_kafi_1790411104227.jpg';
+import gamingImg from '@/src/assets/images/projects/project_gaming_1790411118596.jpg';
+import fintechImg from '@/src/assets/images/projects/project_fintech_1790411153505.jpg';
+
+const FEATURED_PROJECTS: ProjectItem[] = [
+  {
+    id: 'toyooran',
+    titleEn: 'TOYOORAN',
+    titleFa: 'طیوران',
+    categoryEn: 'Web / Brand / Experience',
+    categoryFa: 'وب‌سایت / هویت برند / تجربه کاربری',
+    descEn: 'Architectural, immersive digital flagship capturing sensory depth and physical space.',
+    descFa: 'طراحی پیشرو و معماری دیجیتال برای تجربه‌ای فراتر از یک وب‌سایت متعارف.',
+    image: toyooranImg,
+    accentColor: '#fff083',
+    link: '#project',
+    year: '2026',
+    client: 'Toyooran Agro Industrial',
+    techStack: ['Spatial 3D', 'WebGL', 'Tailwind 4', 'GSAP'],
+  },
+  {
+    id: 'kafi',
+    titleEn: 'KAFI',
+    titleFa: 'کافی',
+    categoryEn: 'Brand Experience',
+    categoryFa: 'طراحی هویت و تجربه فضایی',
+    descEn: 'Sensory boutique coffee atelier with warm ambient amber lighting and dark walnut textures.',
+    descFa: 'آتلیه تخصصی قهوه با فضاسازی گرم، نورپردازی کهربایی و بافت‌های مینیمال چوب.',
+    image: kafiImg,
+    accentColor: '#e5a952',
+    link: '#project',
+    year: '2025',
+    client: 'Kafi Atelier',
+    techStack: ['Sensory UX', 'React 19', 'Audio Engine', 'Amber Bloom'],
+  },
+  {
+    id: 'jirjirak-world',
+    titleEn: 'JIRJIRAK WORLD',
+    titleFa: 'جهان جیرجیرک',
+    categoryEn: 'Gaming',
+    categoryFa: 'بازی‌سازی و شبیه‌سازی سه‌بعدی',
+    descEn: 'Expansive open-world adventure universe with stylized low-poly art and spatial dynamic sound.',
+    descFa: 'دنیای ماجراجویی تعاملی با آرت‌استایل اختصاصی، هویت بصری پویا و شبیه‌سازی صدا.',
+    image: gamingImg,
+    accentColor: '#4cd964',
+    link: '#project',
+    year: '2025',
+    client: 'Jirjirak Game Studios',
+    techStack: ['Three.js', 'Shader Graph', 'GLSL', 'Spatial Audio'],
+  },
+  {
+    id: 'noura',
+    titleEn: 'NOURA BANKING',
+    titleFa: 'سامانه نورا',
+    categoryEn: 'Fintech Architecture',
+    categoryFa: 'سامانه بانکی و زیرساخت مالی',
+    descEn: 'Next-generation financial intelligence hub balancing ultra-low latency with biometric security.',
+    descFa: 'هاب هوشمند مالی با امنیت بیومتریک، معماری بدون تأخیر و داشبورد تحلیلی مدرن.',
+    image: fintechImg,
+    accentColor: '#5ac8fa',
+    link: '#project',
+    year: '2026',
+    client: 'Noura Capital Group',
+    techStack: ['Microfrontends', 'Biometrics', 'Realtime Stream', 'High Security'],
+  },
+];
+
+const containerVariants: Variants = {
+  initial: { opacity: 0, y: 16, filter: 'blur(6px)' },
+  animate: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.07,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -14,
+    filter: 'blur(6px)',
+    transition: {
+      duration: 0.25,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const childVariants: Variants = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -8,
+    transition: { duration: 0.2 },
+  },
+};
 
 export function FeaturedProjectsSection() {
-  const containerRef = useRef<HTMLElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const { isNight, currentLang } = useGlobalStore();
+  const t = useTranslation()(currentLang);
+  const isFa = currentLang === 'FA';
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        carouselRef.current,
-        { opacity: 0, scale: 0.95 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 60%',
-          }
-        }
-      );
-    }, containerRef);
-    return () => ctx.revert();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const containerRef = useRef<HTMLElement>(null);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % FEATURED_PROJECTS.length);
   }, []);
 
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + FEATURED_PROJECTS.length) % FEATURED_PROJECTS.length);
+  }, []);
+
+  const handleSelect = useCallback((idx: number) => {
+    setCurrentIndex(idx);
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        if (isFa) handleNext();
+        else handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        if (isFa) handlePrev();
+        else handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrev, isFa]);
+
+  const activeProject = FEATURED_PROJECTS[currentIndex] || FEATURED_PROJECTS[0];
+
   return (
-    <section id="work" ref={containerRef} className="py-32 px-8 lg:px-12 xl:px-16 bg-brand-light text-brand-dark overflow-hidden">
-      <div className="max-w-[1600px] mx-auto w-full flex flex-col xl:flex-row gap-16 items-center">
-        
-        {/* Text Content */}
-        <div className="xl:w-1/3 flex flex-col items-start z-10 relative">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="text-xs font-semibold tracking-widest text-brand-gray">03 / 08</span>
-            <span className="text-xs font-semibold tracking-widest uppercase">Jirjirak Archive</span>
+    <section 
+      id="work" 
+      ref={containerRef} 
+      data-cursor="project" 
+      className={`py-20 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-12 xl:px-16 overflow-hidden transition-colors duration-700 ease-in-out ${
+        isNight ? 'bg-brand-light text-brand-dark' : 'bg-brand-dark text-brand-light'
+      }`}
+    >
+      <div className="max-w-[1600px] mx-auto w-full flex flex-col">
+        <div className="w-full flex flex-col xl:flex-row gap-10 lg:gap-14 items-center">
+          
+          {/* ===================== LEFT COLUMN (PROJECT META & CONTEXT WITH FLUID TRANSITIONS) ===================== */}
+          <div className="xl:w-[32%] flex flex-col items-start z-20 relative w-full">
+            
+            {/* Section Step Badge & Counter */}
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-[#b3a85c]' : 'text-brand-yellow'}`}>
+                {t.featuredProjects.step}
+              </span>
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-gray">
+                {t.featuredProjects.category || 'JIRJIRAK ARCHIVE'}
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentIndex}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.25 }}
+                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-yellow/15 text-brand-yellow border border-brand-yellow/30 font-bold"
+                >
+                  0{currentIndex + 1} / 0{FEATURED_PROJECTS.length}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
+            {/* Dynamic Text Information Animating on Project Change */}
+            <div className="w-full min-h-[290px] flex flex-col justify-start">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeProject.id}
+                  variants={containerVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="flex flex-col items-start w-full"
+                >
+                  {/* Main Title */}
+                  <motion.h2 
+                    variants={childVariants}
+                    className="text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.1] mb-3 tracking-tight"
+                  >
+                    {isFa ? activeProject.titleFa : activeProject.titleEn}
+                  </motion.h2>
+
+                  {/* Category Subtitle */}
+                  <motion.p 
+                    variants={childVariants}
+                    className="text-xs font-mono tracking-wider text-brand-yellow uppercase mb-3 font-semibold"
+                  >
+                    {isFa ? activeProject.categoryFa : activeProject.categoryEn}
+                  </motion.p>
+                  
+                  {/* Description */}
+                  <motion.p 
+                    variants={childVariants}
+                    className={`text-sm sm:text-base leading-relaxed mb-6 max-w-md ${
+                      isNight ? 'text-brand-gray' : 'text-neutral-400'
+                    }`}
+                  >
+                    {isFa ? activeProject.descFa : activeProject.descEn}
+                  </motion.p>
+
+                  {/* Client & Tech Spec Tags */}
+                  <motion.div 
+                    variants={childVariants}
+                    className="flex flex-wrap gap-2 mb-8"
+                  >
+                    {activeProject.techStack?.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className={`text-[11px] font-mono px-2.5 py-1 rounded-lg border transition-all ${
+                          isNight
+                            ? 'bg-black/5 border-black/10 text-neutral-700'
+                            : 'bg-white/5 border-white/10 text-neutral-300'
+                        }`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </motion.div>
+                  
+                  {/* View All Projects Action */}
+                  <motion.a 
+                    variants={childVariants}
+                    href="#work" 
+                    className={`text-xs font-bold uppercase tracking-widest border-b-2 pb-1 transition-colors flex items-center gap-2 group ${
+                      isNight 
+                        ? 'text-[#b3a85c] border-[#b3a85c] hover:text-brand-dark hover:border-brand-dark' 
+                        : 'text-brand-yellow border-brand-yellow hover:text-white hover:border-white'
+                    }`}
+                  >
+                    {t.featuredProjects.viewAll}
+                    <svg className="w-4 h-4 rtl:rotate-180 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </motion.a>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
           </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-            Featured<br />Projects
-          </h2>
-          
-          <p className="text-brand-gray text-base leading-relaxed mb-12 max-w-sm">
-            A collection of ideas, collaborations and products we've built. Each project is a new world to explore.
-          </p>
-          
-          <a href="#work" className="text-xs font-bold uppercase tracking-widest text-brand-dark border-b-2 border-brand-dark pb-1 hover:text-brand-gray hover:border-brand-gray transition-colors flex items-center gap-2">
-            View All Projects
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </a>
+
+          {/* ===================== RIGHT COLUMN (ARCHITECTURAL KINETIC BLADES) ===================== */}
+          <div className="xl:w-[68%] relative w-full flex items-center justify-center">
+            <div className="w-full">
+              <KineticBladesModel
+                projects={FEATURED_PROJECTS}
+                currentIndex={currentIndex}
+                onSelect={handleSelect}
+                isNight={isNight}
+                isFa={isFa}
+              />
+            </div>
+          </div>
+
         </div>
-
-        {/* Spatial Carousel Placeholder */}
-        <div ref={carouselRef} className="xl:w-2/3 relative w-full h-[500px] flex items-center justify-center perspective-[1200px]">
-          
-          {/* Left Geometric Yellow Frame */}
-          <div className="hidden md:block absolute left-4 lg:left-0 top-1/2 -translate-y-1/2 w-4 h-[400px] bg-brand-yellow transform rotate-y-[-45deg] translate-z-[-100px] shadow-2xl z-0"></div>
-
-          {/* Left Project (Architectural Angle) */}
-          <div className="absolute left-0 md:left-4 w-[160px] md:w-[260px] h-[350px] md:h-[480px] bg-brand-dark rounded-l-xl border border-r-0 border-gray-800 transform rotate-y-[-45deg] -translate-x-4 translate-z-[-300px] opacity-40 shadow-2xl overflow-hidden flex items-end p-6 z-0">
-            <div className="text-brand-light transform rotate-y-[45deg] origin-left">
-              <h3 className="font-bold text-xs opacity-50">PREV</h3>
-              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">KAFI Branding</p>
-            </div>
-          </div>
-          
-          {/* Center Project (Active) */}
-          <div className="absolute z-20 w-[280px] md:w-[480px] h-[480px] md:h-[600px] bg-brand-dark rounded-xl shadow-2xl overflow-hidden flex flex-col group cursor-pointer transition-transform duration-500 hover:scale-[1.02]">
-            <div className="flex-1 bg-brand-surface relative overflow-hidden">
-               {/* Image Placeholder */}
-               <div className="absolute inset-0 bg-brand-surface-light flex items-center justify-center">
-                 <div className="w-32 h-32 border border-brand-gray/30 rounded-lg rotate-12 bg-brand-dark opacity-50"></div>
-                 <span className="absolute text-[10px] text-brand-gray uppercase tracking-widest">Project Visual</span>
-               </div>
-            </div>
-            {/* Center Project Footer */}
-            <div className="h-28 md:h-32 bg-brand-dark p-6 md:p-8 flex flex-col justify-end text-brand-light relative">
-              {/* Yellow Accent Corner */}
-              <div className="absolute top-0 right-0 w-10 h-10">
-                  <div className="absolute top-0 right-0 w-full h-full bg-brand-yellow rounded-bl-xl"></div>
-              </div>
-              <h3 className="font-bold text-xl md:text-2xl">TOYOORAN</h3>
-              <p className="text-xs md:text-sm text-brand-gray mb-2">Web / Brand / Experience</p>
-              <div className="flex items-center gap-2 text-brand-yellow text-xs font-semibold uppercase tracking-wider opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-                <span>View Project</span>
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-          
-          {/* Right Project (Architectural Angle) */}
-          <div className="absolute right-0 md:right-4 w-[160px] md:w-[260px] h-[350px] md:h-[480px] bg-brand-dark rounded-r-xl border border-l-0 border-gray-800 transform rotate-y-[45deg] translate-x-4 translate-z-[-300px] opacity-40 shadow-2xl overflow-hidden flex items-end p-6 text-right justify-end z-0">
-             <div className="text-brand-light transform rotate-y-[-45deg] origin-right flex flex-col items-end">
-              <h3 className="font-bold text-xs opacity-50">NEXT</h3>
-              <p className="text-[10px] text-brand-gray truncate w-24 md:w-32">JIRJIRAK Gaming</p>
-            </div>
-          </div>
-
-          {/* Right Geometric Yellow Frame */}
-          <div className="hidden md:block absolute right-4 lg:right-0 top-1/2 -translate-y-1/2 w-4 h-[400px] bg-brand-yellow transform rotate-y-[45deg] translate-z-[-100px] shadow-2xl z-0"></div>
-
-          {/* Navigation Arrows (Positioned outside the central composition) */}
-          <div className="absolute -bottom-6 w-full flex justify-center gap-4 z-30">
-            <button className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
-              <svg className="w-5 h-5 text-brand-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-              </svg>
-            </button>
-            <button className="w-12 h-12 rounded-full border border-gray-200 bg-white/50 backdrop-blur-md shadow-sm flex items-center justify-center hover:bg-white hover:shadow-md transition-all">
-              <svg className="w-5 h-5 text-brand-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
-
-        </div>
-
       </div>
     </section>
   );
