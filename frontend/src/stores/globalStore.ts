@@ -1,10 +1,16 @@
 import { create } from 'zustand';
 import { ambientAudio } from '../services/ambientAudio';
 
+export type LandingLayoutMode = 'classic' | 'zigzag' | 'editorial';
+
 interface GlobalState {
   isWorldLoaded: boolean;
   setWorldLoaded: (loaded: boolean) => void;
   
+  // Landing Page Architectural Layout Mode ('classic' | 'zigzag' | 'editorial')
+  landingLayoutMode: LandingLayoutMode;
+  setLandingLayoutMode: (mode: LandingLayoutMode) => void;
+
   // Theme State
   isNight: boolean;
   setIsNight: (night: boolean) => void;
@@ -35,6 +41,15 @@ interface GlobalState {
 export const useGlobalStore = create<GlobalState>((set, get) => ({
   isWorldLoaded: false,
   setWorldLoaded: (loaded) => set({ isWorldLoaded: loaded }),
+
+  // Landing Page Architectural Layout Mode
+  landingLayoutMode: ((typeof window !== 'undefined' && localStorage.getItem('jirjirak_layout_mode')) as LandingLayoutMode) || 'zigzag',
+  setLandingLayoutMode: (mode) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('jirjirak_layout_mode', mode);
+    }
+    set({ landingLayoutMode: mode });
+  },
 
   // Theme
   isNight: true,

@@ -126,7 +126,6 @@ export function DepartmentFlipBoard() {
   const [direction, setDirection] = useState<1 | -1>(1);
   const [isHovered, setIsHovered] = useState(false);
   const [loadedHighResMap, setLoadedHighResMap] = useState<Record<string, boolean>>({});
-  const lastWheelTime = useRef<number>(0);
   const boardRef = useRef<HTMLDivElement>(null);
 
   // Instant Preloading of all thumbnails and optimized webp assets
@@ -137,7 +136,7 @@ export function DepartmentFlipBoard() {
         const thumb = new Image();
         thumb.src = dept.thumbImage;
       }
-      // 2. Preload full-res webp
+      // 2. Preload high-res webp
       if (dept.bgImage) {
         const img = new Image();
         img.src = dept.bgImage;
@@ -172,52 +171,6 @@ export function DepartmentFlipBoard() {
     }, 5500);
     return () => clearInterval(timer);
   }, [isHovered, goToNext]);
-
-  // Native non-passive wheel listener on boardRef
-  // When cursor is over carousel, ONLY carousel changes slides and page DOES NOT scroll.
-  // When cursor is outside carousel, carousel is untouched and page scrolls normally.
-  useEffect(() => {
-    const element = boardRef.current;
-    if (!element) return;
-
-    const handleWheelNative = (e: WheelEvent) => {
-      // Prevent browser / window page scroll while wheeling over carousel
-      e.preventDefault();
-      e.stopPropagation();
-
-      const now = Date.now();
-      if (now - lastWheelTime.current < 380) return;
-      
-      if (Math.abs(e.deltaY) > 15) {
-        lastWheelTime.current = now;
-        if (e.deltaY > 0) {
-          goToNext();
-        } else {
-          goToPrev();
-        }
-      }
-    };
-
-    element.addEventListener('wheel', handleWheelNative, { passive: false });
-    return () => {
-      element.removeEventListener('wheel', handleWheelNative);
-    };
-  }, [goToNext, goToPrev]);
-
-  // Drag handler for smooth vertical swipe
-  const handleDragEnd = (
-    _: MouseEvent | TouchEvent | PointerEvent,
-    info: { offset: { y: number }; velocity: { y: number } }
-  ) => {
-    const threshold = 35;
-    const velocityThreshold = 150;
-
-    if (info.offset.y > threshold || info.velocity.y > velocityThreshold) {
-      goToNext();
-    } else if (info.offset.y < -threshold || info.velocity.y < -velocityThreshold) {
-      goToPrev();
-    }
-  };
 
   const currentDept = DEPARTMENTS[currentIndex];
 
@@ -354,10 +307,10 @@ export function DepartmentFlipBoard() {
       ref={boardRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full h-full min-h-[480px] lg:min-h-[520px] self-stretch rounded-2xl transition-colors duration-500 relative overflow-hidden flex items-center justify-center select-none cursor-grab active:cursor-grabbing border shadow-md ${
+      className={`w-full h-full min-h-[480px] lg:min-h-[520px] self-stretch rounded-2xl transition-colors duration-500 relative overflow-hidden flex items-center justify-center select-none cursor-default border shadow-md ${
         isNight 
-          ? 'bg-brand-surface border-brand-surface-light text-brand-light shadow-[0_16px_40px_rgba(0,0,0,0.4)]' 
-          : 'bg-white border-gray-200 text-brand-dark shadow-[0_12px_30px_rgba(0,0,0,0.05)]'
+          ? 'bg-[#151619] border-brand-surface-light text-brand-light shadow-[0_16px_40px_rgba(0,0,0,0.4)]' 
+          : 'bg-[#1a1b1e] border-gray-200 text-brand-dark shadow-[0_12px_30px_rgba(0,0,0,0.05)]'
       }`}
       aria-label="Department Showcase Board"
     >
@@ -366,26 +319,26 @@ export function DepartmentFlipBoard() {
         {currentDept.bgImage && (
           <motion.div
             key={`bg-${currentDept.id}`}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none flex items-center justify-center"
           >
-            {/* 1. Low-res blurred instant placeholder */}
+            {/* 1. Low-res blurred instant placeholder (Blur-up like Hero) */}
             {currentDept.thumbImage && (
               <img
                 src={currentDept.thumbImage}
                 alt=""
-                className={`absolute inset-0 w-full h-full object-cover object-center filter blur-xs transform scale-105 transition-opacity duration-300 ${
+                className={`absolute inset-0 w-full h-full object-contain p-4 sm:p-6 lg:p-8 scale-[0.86] origin-center filter blur-md transition-opacity duration-700 ease-out ${
                   loadedHighResMap[currentDept.id] ? 'opacity-0' : 'opacity-100'
                 } ${
-                  isNight ? 'brightness-[0.72] contrast-[1.08]' : 'brightness-[0.95] contrast-[1.05]'
+                  isNight ? 'brightness-[0.75] contrast-[1.08]' : 'brightness-[0.95] contrast-[1.05]'
                 }`}
               />
             )}
 
-            {/* 2. High-res optimized WebP (crisp and visible) */}
+            {/* 2. High-res crisp room illustration (Zoomed out to comfortably fit without touching container edges) */}
             <img
               src={currentDept.bgImage}
               alt=""
@@ -398,11 +351,13 @@ export function DepartmentFlipBoard() {
                   target.src = target.src.replace('-opt.webp', '.png');
                 }
               }}
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
-                loadedHighResMap[currentDept.id] ? 'opacity-100' : 'opacity-70'
+              className={`absolute inset-0 w-full h-full object-contain p-4 sm:p-6 lg:p-8 origin-center transition-all duration-700 ease-out ${
+                loadedHighResMap[currentDept.id] 
+                  ? 'opacity-100 blur-0 scale-[0.86]' 
+                  : 'opacity-0 blur-sm scale-[0.88]'
               } ${
                 isNight 
-                  ? 'brightness-[0.72] contrast-[1.1] saturate-[1.05]' 
+                  ? 'brightness-[0.75] contrast-[1.08] saturate-[1.05]' 
                   : 'brightness-[0.92] contrast-[1.08] saturate-[1.05]'
               }`}
             />
@@ -411,8 +366,8 @@ export function DepartmentFlipBoard() {
             <div 
               className={`absolute inset-0 transition-colors duration-500 pointer-events-none ${
                 isNight 
-                  ? 'bg-gradient-to-b from-brand-dark/75 via-brand-dark/30 to-brand-dark/75' 
-                  : 'bg-gradient-to-b from-white/75 via-white/40 to-white/75'
+                  ? 'bg-gradient-to-b from-[#151619]/75 via-transparent to-[#151619]/75' 
+                  : 'bg-gradient-to-b from-white/70 via-white/35 to-white/70'
               }`} 
             />
 
@@ -420,8 +375,8 @@ export function DepartmentFlipBoard() {
             <div 
               className={`absolute inset-0 pointer-events-none ${
                 isNight
-                  ? 'bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(18,18,18,0.55)_85%)]'
-                  : 'bg-[radial-gradient(ellipse_at_center,_transparent_35%,_rgba(245,245,245,0.5)_85%)]'
+                  ? 'bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(21,22,25,0.6)_85%)]'
+                  : 'bg-[radial-gradient(ellipse_at_center,_transparent_35%,_rgba(245,245,245,0.45)_85%)]'
               }`}
             />
           </motion.div>
@@ -551,11 +506,7 @@ export function DepartmentFlipBoard() {
           }`}
         />
 
-        <motion.div
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.15}
-          onDragEnd={handleDragEnd}
+        <div
           className="w-full max-w-xl flex flex-col items-center justify-center text-center relative z-10"
         >
           {/* Distinctly Animated Title Header with Word-by-Word Kinetic Animation */}
@@ -652,7 +603,7 @@ export function DepartmentFlipBoard() {
               </motion.div>
             </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

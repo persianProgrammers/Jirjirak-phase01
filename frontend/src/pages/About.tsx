@@ -1,19 +1,24 @@
+import { useEffect } from 'react';
 import { useGlobalStore } from '../stores/globalStore';
+import { AboutSection } from '../features/landing/sections/AboutSection';
+import { PhilosophySection } from '../features/landing/sections/PhilosophySection';
 
 export default function About() {
-  const { currentLang } = useGlobalStore();
-  const isFa = currentLang === 'FA';
+  const { isNight } = useGlobalStore();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
-    <div className="py-32 px-8 lg:px-16 max-w-4xl mx-auto min-h-[60vh]">
-      <h1 className="text-4xl font-bold mb-6 text-brand-yellow">
-        {isFa ? 'درباره جیرجیرک' : 'About Jirjirak'}
-      </h1>
-      <p className="text-brand-gray text-lg leading-relaxed">
-        {isFa 
-          ? 'جیرجیرک یک استودیوی خلاق است که توسط تیمی کوچک از افراد مشتاق ساخته شده است. ما به کیفیت به جای کمیت، عمق به جای سرعت، و ایده‌های معنادار باور داریم.'
-          : 'Jirjirak is a creative studio, built by a small team of passionate people. We believe in quality over quantity, depth over speed, and ideas that actually matter.'}
-      </p>
+    <div className={`w-full min-h-screen pt-16 sm:pt-20 transition-colors duration-700 ${
+      isNight ? 'bg-brand-light text-brand-dark' : 'bg-brand-dark text-brand-light'
+    }`}>
+      {/* 05 / 08 About Section: Studio Mission & Full Interactive Team Atelier with Department Filters */}
+      <AboutSection variant="full" />
+
+      {/* 06 / 08 The Philosophy Section: Directly underneath the About Section */}
+      <PhilosophySection />
     </div>
   );
 }

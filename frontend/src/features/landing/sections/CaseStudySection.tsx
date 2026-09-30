@@ -6,7 +6,7 @@ import { useTranslation } from '../../../i18n/translations';
 export function CaseStudySection() {
   const containerRef = useRef<HTMLElement>(null);
   const elementsRef = useRef<HTMLDivElement>(null);
-  const { currentLang, isNight } = useGlobalStore();
+  const { currentLang, isNight, landingLayoutMode } = useGlobalStore();
   const t = useTranslation()(currentLang);
 
   useEffect(() => {
@@ -39,7 +39,9 @@ export function CaseStudySection() {
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
       }`}
     >
-      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-16 relative">
+      <div className={`max-w-[1600px] mx-auto w-full flex flex-col ${
+        landingLayoutMode === 'zigzag' ? 'lg:flex-row-reverse' : 'lg:flex-row'
+      } gap-16 relative transition-all duration-500`}>
         
         {/* Left Column (Info & Steps) */}
         <div className="lg:w-1/4 flex flex-col relative z-10 lg:self-stretch">

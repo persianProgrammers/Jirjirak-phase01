@@ -13,7 +13,6 @@ const LANDING_SECTIONS = [
   { id: 'work' },
   { id: 'case-study' },
   { id: 'about' },
-  { id: 'philosophy' },
   { id: 'journal' },
   { id: 'contact' },
 ];

@@ -289,7 +289,7 @@ const serviceIllustrations = [
 export function ServicesSection() {
   const containerRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
-  const { currentLang, isNight } = useGlobalStore();
+  const { currentLang, isNight, landingLayoutMode } = useGlobalStore();
   const t = useTranslation()(currentLang);
 
   useEffect(() => {
@@ -323,67 +323,115 @@ export function ServicesSection() {
         isNight ? 'bg-brand-dark text-brand-light' : 'bg-brand-light text-brand-dark'
       }`}
     >
-      <div className="max-w-[1600px] mx-auto w-full flex flex-col lg:flex-row gap-16 lg:gap-20">
-        
-        {/* Left Column: Heading, Subtitle & ALL SERVICES Underlined Action */}
-        <div className="lg:w-[38%] flex flex-col self-stretch">
-          {/* Step & Category Tag (Top aligned with right cards) */}
-          <div className="flex items-center gap-4 mb-6">
-            <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>
-              {t.services.step}
-            </span>
-            <span className="text-xs font-semibold tracking-widest uppercase">
-              {t.services.badge}
-            </span>
-          </div>
-          
-          {/* Main Content Group centered vertically in section */}
-          <div className="lg:my-auto flex flex-col items-start py-6 lg:py-0">
-            {/* Main Section Title */}
-            <h2 className={`text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.1] mb-6 tracking-tight ${
+      {/* Editorial Cinema Mode: Centered Top Header with Full-Width Centered FlipBoard */}
+      {landingLayoutMode === 'editorial' ? (
+        <div className="max-w-[1600px] mx-auto w-full flex flex-col items-center gap-10 lg:gap-14">
+          <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+            <div className="flex items-center gap-4 mb-4">
+              <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>
+                {t.services.step}
+              </span>
+              <span className="text-xs font-semibold tracking-widest uppercase">
+                {t.services.badge}
+              </span>
+            </div>
+            
+            <h2 className={`text-4xl sm:text-5xl lg:text-[52px] font-bold leading-[1.1] mb-5 tracking-tight ${
               isNight ? 'text-white' : 'text-brand-dark'
             }`}>
-              {t.services.titleLine1}<br />{t.services.titleLine2}
+              {t.services.titleLine1} {t.services.titleLine2}
             </h2>
             
-            {/* Description Text */}
-            <p className="text-brand-gray text-base lg:text-[17px] leading-relaxed mb-8 lg:mb-10 max-w-md">
+            <p className="text-brand-gray text-base lg:text-[17px] leading-relaxed mb-6 max-w-2xl">
               {t.services.description}
             </p>
 
-            {/* ALL SERVICES link directly below the description with prominent underline */}
-            <div>
-              <a
-                href="#services"
-                className={`group inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
-                  isNight 
-                    ? 'text-brand-yellow hover:text-white border-brand-yellow hover:border-white' 
-                    : 'text-[#b3a85c] hover:text-brand-dark border-[#b3a85c] hover:border-brand-dark'
-                }`}
+            <a
+              href="#services"
+              className={`group inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
+                isNight 
+                  ? 'text-brand-yellow hover:text-white border-brand-yellow hover:border-white' 
+                  : 'text-[#b3a85c] hover:text-brand-dark border-[#b3a85c] hover:border-brand-dark'
+              }`}
+            >
+              <span>{t.services.exploreAll}</span>
+              <svg
+                className="w-4 h-4 rtl:rotate-180 transform group-hover:translate-x-1.5 rtl:group-hover:-translate-x-1.5 transition-transform duration-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
               >
-                <span>{t.services.exploreAll}</span>
-                <svg
-                  className="w-4 h-4 rtl:rotate-180 transform group-hover:translate-x-1.5 rtl:group-hover:-translate-x-1.5 transition-transform duration-300"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
 
-          <div className="hidden lg:block h-6 w-full" aria-hidden="true" />
+          <div ref={cardsRef} className="w-full max-w-6xl mx-auto self-stretch flex items-center justify-center">
+            <DepartmentFlipBoard />
+          </div>
         </div>
+      ) : (
+        /* Classic (Row) or ZigZag (Row-Reverse) */
+        <div className={`max-w-[1600px] mx-auto w-full flex flex-col gap-16 lg:gap-20 transition-all duration-500 ${
+          landingLayoutMode === 'zigzag' ? 'lg:flex-row-reverse' : 'lg:flex-row'
+        }`}>
+          
+          {/* Text Column */}
+          <div className="lg:w-[38%] flex flex-col self-stretch">
+            <div className="flex items-center gap-4 mb-6">
+              <span className={`text-xs font-semibold tracking-widest ${isNight ? 'text-brand-yellow' : 'text-[#b3a85c]'}`}>
+                {t.services.step}
+              </span>
+              <span className="text-xs font-semibold tracking-widest uppercase">
+                {t.services.badge}
+              </span>
+            </div>
+            
+            <div className="lg:my-auto flex flex-col items-start py-6 lg:py-0">
+              <h2 className={`text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.1] mb-6 tracking-tight ${
+                isNight ? 'text-white' : 'text-brand-dark'
+              }`}>
+                {t.services.titleLine1}<br />{t.services.titleLine2}
+              </h2>
+              
+              <p className="text-brand-gray text-base lg:text-[17px] leading-relaxed mb-8 lg:mb-10 max-w-md">
+                {t.services.description}
+              </p>
 
-        {/* Right Column: Monolithic Department Flip Board (Vertical 7-Department Cuboid Board) */}
-        <div ref={cardsRef} className="lg:w-[62%] w-full self-stretch flex items-center">
-          <DepartmentFlipBoard />
+              <div>
+                <a
+                  href="#services"
+                  className={`group inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest transition-colors pb-1 border-b-2 ${
+                    isNight 
+                      ? 'text-brand-yellow hover:text-white border-brand-yellow hover:border-white' 
+                      : 'text-[#b3a85c] hover:text-brand-dark border-[#b3a85c] hover:border-brand-dark'
+                  }`}
+                >
+                  <span>{t.services.exploreAll}</span>
+                  <svg
+                    className="w-4 h-4 rtl:rotate-180 transform group-hover:translate-x-1.5 rtl:group-hover:-translate-x-1.5 transition-transform duration-300"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div className="hidden lg:block h-6 w-full" aria-hidden="true" />
+          </div>
+
+          {/* Department Flip Board Column */}
+          <div ref={cardsRef} className="lg:w-[62%] w-full self-stretch flex items-center">
+            <DepartmentFlipBoard />
+          </div>
+
         </div>
-
-      </div>
+      )}
     </section>
   );
 }

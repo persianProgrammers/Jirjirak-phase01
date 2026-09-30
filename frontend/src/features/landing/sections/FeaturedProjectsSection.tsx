@@ -112,7 +112,7 @@ const childVariants: Variants = {
 };
 
 export function FeaturedProjectsSection() {
-  const { isNight, currentLang } = useGlobalStore();
+  const { isNight, currentLang, landingLayoutMode } = useGlobalStore();
   const t = useTranslation()(currentLang);
   const isFa = currentLang === 'FA';
 
@@ -158,7 +158,9 @@ export function FeaturedProjectsSection() {
       }`}
     >
       <div className="max-w-[1600px] mx-auto w-full flex flex-col">
-        <div className="w-full flex flex-col xl:flex-row gap-10 lg:gap-14 items-center">
+        <div className={`w-full flex flex-col ${
+          landingLayoutMode === 'editorial' ? 'xl:flex-row-reverse' : 'xl:flex-row'
+        } gap-10 lg:gap-14 items-center transition-all duration-500`}>
           
           {/* ===================== LEFT COLUMN (PROJECT META & CONTEXT WITH FLUID TRANSITIONS) ===================== */}
           <div className="xl:w-[32%] flex flex-col items-start z-20 relative w-full">

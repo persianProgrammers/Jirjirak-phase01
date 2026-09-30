@@ -4,6 +4,7 @@ import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { VintageJazzCapsule } from '../components/ui/VintageJazzCapsule';
 import { StudioToolboxDock } from '../components/ui/StudioToolboxDock';
+import { LayoutDirectorBridge } from '../components/ui/LayoutDirectorBridge';
 import { ScreenTransitionCurtain } from '../components/ui/ScreenTransitionCurtain';
 import { useGlobalStore } from '../stores/globalStore';
 
@@ -41,6 +42,9 @@ export default function MainLayout() {
 
       {/* 🧰 Steampunk Vintage Toolbox Dock (Single Minimal Floating Toolbox Button) */}
       <StudioToolboxDock />
+
+      {/* 📐 Landing Layout Director Bridge (Compare and Toggle Landing Layouts in Real-time) */}
+      <LayoutDirectorBridge />
 
       <Header />
       <main className="flex-grow w-full relative z-10">

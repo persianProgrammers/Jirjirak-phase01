@@ -65,7 +65,7 @@ export const ALL_TEAM_MEMBERS: MemberData[] = [
     badgeFa: 'هم‌بنیان‌گذار',
     isFounder: true,
     department: 'leadership',
-    image: '/assets/images/team/abdollah.jpg',
+    image: '/assets/images/team/abdollah.png',
     bioEn: 'Shaping spaces, systems, and multidisciplinary creative experiences with structural clarity and architectural balance.',
     bioFa: 'طراحی فضاها، سیستم‌های پیچیده چندرشته‌ای و هدایت ساختار دیزاین استودیو با رویکرد مهندسی و بصری یکپارچه.',
     stats: [
@@ -89,7 +89,7 @@ export const ALL_TEAM_MEMBERS: MemberData[] = [
     badgeFa: 'هم‌بنیان‌گذار',
     isFounder: true,
     department: 'leadership',
-    image: '/assets/images/team/rouhollah.jpg',
+    image: '/assets/images/team/rouhollah.png',
     bioEn: 'Pioneering cutting-edge digital craftsmanship, software architecture, shaders, WebGL, and high-performance real-time systems.',
     bioFa: 'توسعه زیرساخت‌های مهندسی، برنامه‌نویسی خلاق، وب سه‌بعدی تعاملی، شیدرها و معماری پایدار نرم‌افزاری استودیو.',
     stats: [
@@ -113,7 +113,7 @@ export const ALL_TEAM_MEMBERS: MemberData[] = [
     badgeFa: 'هم‌بنیان‌گذار',
     isFounder: true,
     department: 'leadership',
-    image: '/assets/images/team/sina.jpg',
+    image: '/assets/images/team/sina.png',
     bioEn: 'Crafting bespoke brand identities, tactile typography, expressive illustrations, and holistic visual narratives.',
     bioFa: 'خلق هویت‌های بصری ماندگار، تایپوگرافی مفهومی، تصویرسازی‌های متمایز و هدایت سبک هنری پروژه‌های استودیو.',
     stats: [
