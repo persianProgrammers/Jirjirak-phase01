@@ -377,10 +377,10 @@ export function DepartmentFlipBoard() {
               <img
                 src={currentDept.thumbImage}
                 alt=""
-                className={`absolute inset-0 w-full h-full object-cover object-center filter blur-md transform scale-105 transition-opacity duration-500 ${
+                className={`absolute inset-0 w-full h-full object-cover object-center filter blur-xs transform scale-105 transition-opacity duration-300 ${
                   loadedHighResMap[currentDept.id] ? 'opacity-0' : 'opacity-100'
                 } ${
-                  isNight ? 'brightness-[0.45] contrast-[1.1]' : 'brightness-[0.9] contrast-[1.05]'
+                  isNight ? 'brightness-[0.72] contrast-[1.08]' : 'brightness-[0.95] contrast-[1.05]'
                 }`}
               />
             )}
@@ -392,24 +392,27 @@ export function DepartmentFlipBoard() {
               onLoad={() => {
                 setLoadedHighResMap((prev) => ({ ...prev, [currentDept.id]: true }));
               }}
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
-                loadedHighResMap[currentDept.id] ? 'opacity-100' : 'opacity-0'
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                if (!target.src.endsWith('.png')) {
+                  target.src = target.src.replace('-opt.webp', '.png');
+                }
+              }}
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ${
+                loadedHighResMap[currentDept.id] ? 'opacity-100' : 'opacity-70'
               } ${
                 isNight 
-                  ? 'brightness-[0.52] contrast-[1.12] saturate-[1.05]' 
+                  ? 'brightness-[0.72] contrast-[1.1] saturate-[1.05]' 
                   : 'brightness-[0.92] contrast-[1.08] saturate-[1.05]'
               }`}
-              onError={(e) => {
-                (e.currentTarget as HTMLElement).style.display = 'none';
-              }}
             />
 
             {/* Architectural Subtle Vignette & Gradient (Preserves image details while keeping text clear) */}
             <div 
               className={`absolute inset-0 transition-colors duration-500 pointer-events-none ${
                 isNight 
-                  ? 'bg-gradient-to-b from-brand-dark/85 via-brand-dark/45 to-brand-dark/85' 
-                  : 'bg-gradient-to-b from-white/85 via-white/50 to-white/80'
+                  ? 'bg-gradient-to-b from-brand-dark/75 via-brand-dark/30 to-brand-dark/75' 
+                  : 'bg-gradient-to-b from-white/75 via-white/40 to-white/75'
               }`} 
             />
 
@@ -417,8 +420,8 @@ export function DepartmentFlipBoard() {
             <div 
               className={`absolute inset-0 pointer-events-none ${
                 isNight
-                  ? 'bg-[radial-gradient(ellipse_at_center,_transparent_20%,_rgba(18,18,18,0.7)_80%)]'
-                  : 'bg-[radial-gradient(ellipse_at_center,_transparent_25%,_rgba(245,245,245,0.65)_80%)]'
+                  ? 'bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(18,18,18,0.55)_85%)]'
+                  : 'bg-[radial-gradient(ellipse_at_center,_transparent_35%,_rgba(245,245,245,0.5)_85%)]'
               }`}
             />
           </motion.div>
@@ -539,12 +542,21 @@ export function DepartmentFlipBoard() {
 
       {/* Main Single Container Stage (Static Anchor Layout with Separator Firmly Anchored) */}
       <div className="w-full flex items-center justify-center px-4 sm:px-8 lg:px-10 py-7 relative z-10">
+        {/* Subtle Central Focal Scrim (Enhances contrast behind text without altering corner vignette) */}
+        <div
+          className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+            isNight
+              ? 'bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.5)_0%,_rgba(0,0,0,0.22)_50%,_transparent_75%)]'
+              : 'bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.65)_0%,_rgba(255,255,255,0.3)_50%,_transparent_75%)]'
+          }`}
+        />
+
         <motion.div
           drag="y"
           dragConstraints={{ top: 0, bottom: 0 }}
           dragElastic={0.15}
           onDragEnd={handleDragEnd}
-          className="w-full max-w-xl flex flex-col items-center justify-center text-center"
+          className="w-full max-w-xl flex flex-col items-center justify-center text-center relative z-10"
         >
           {/* Distinctly Animated Title Header with Word-by-Word Kinetic Animation */}
           <div className="min-h-[42px] sm:min-h-[48px] flex items-center justify-center w-full overflow-hidden">
@@ -557,7 +569,7 @@ export function DepartmentFlipBoard() {
                 animate="center"
                 exit="exit"
                 className={`text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-center leading-snug flex flex-wrap items-center justify-center gap-x-2 transition-colors duration-300 ${
-                  isNight ? 'text-white' : 'text-brand-dark'
+                  isNight ? 'text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]' : 'text-brand-dark drop-shadow-[0_1px_4px_rgba(255,255,255,0.8)]'
                 }`}
               >
                 {(isFa ? currentDept.titleFa : currentDept.titleEn).split(' ').map((word, wordIdx) => (
@@ -576,10 +588,10 @@ export function DepartmentFlipBoard() {
 
           {/* 3. STATIC / PERMANENT DIVIDER LINE (Remains completely still and rock-solid during transitions) */}
           <div className="flex items-center justify-center my-4 sm:my-5 w-full pointer-events-none">
-            <div className={`h-[1px] w-64 sm:w-80 md:w-96 max-w-md rounded-full transition-colors duration-500 ${
+            <div className={`h-[1.5px] w-64 sm:w-80 md:w-96 max-w-md rounded-full transition-all duration-500 ${
               isNight 
-                ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent' 
-                : 'bg-gradient-to-r from-transparent via-neutral-300 to-transparent'
+                ? 'bg-gradient-to-r from-transparent via-brand-yellow/75 to-transparent shadow-[0_0_12px_rgba(255,240,131,0.45)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]' 
+                : 'bg-gradient-to-r from-transparent via-[#b3a85c]/75 to-transparent drop-shadow-[0_1px_3px_rgba(255,255,255,0.9)]'
             }`} />
           </div>
 
@@ -593,8 +605,10 @@ export function DepartmentFlipBoard() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className={`text-sm sm:text-[15px] leading-relaxed max-w-lg mx-auto text-center font-normal flex flex-wrap items-center justify-center gap-x-1.5 transition-colors duration-300 ${
-                  isNight ? 'text-brand-gray/90' : 'text-neutral-600'
+                className={`text-sm sm:text-base leading-relaxed max-w-xl mx-auto text-center font-medium flex flex-wrap items-center justify-center gap-x-1.5 transition-colors duration-300 ${
+                  isNight 
+                    ? 'text-white/95 [text-shadow:_0_2px_10px_rgba(0,0,0,0.95),_0_1px_3px_rgba(0,0,0,0.9)]' 
+                    : 'text-neutral-900 [text-shadow:_0_1px_8px_rgba(255,255,255,0.95),_0_1px_2px_rgba(255,255,255,0.9)]'
                 }`}
               >
                 {(isFa ? currentDept.subtitleFa : currentDept.subtitleEn).split(' ').map((word, wordIdx) => (
