@@ -145,7 +145,7 @@ export function AboutSection({ variant = 'landing' }: AboutSectionProps) {
               </div>
             ) : (
               <div className="w-full">
-                <StudioTeamAtelier />
+                <StudioTeamAtelier isNight={isNight} isFa={isFa} />
               </div>
             )}
           </div>
