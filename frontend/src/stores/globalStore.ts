@@ -1,9 +1,19 @@
 import { create } from 'zustand';
 import { ambientAudio } from '../services/ambientAudio';
 
+export type HeroLayoutMode =
+  | 'minimal-editorial'
+  | 'minimal-gallery'
+  | 'minimal-horizon'
+  | 'classic-default';
+
 interface GlobalState {
   isWorldLoaded: boolean;
   setWorldLoaded: (loaded: boolean) => void;
+
+  // Hero Layout Mode State
+  heroLayoutMode: HeroLayoutMode;
+  setHeroLayoutMode: (mode: HeroLayoutMode) => void;
 
   // Theme State
   isNight: boolean;
@@ -35,6 +45,15 @@ interface GlobalState {
 export const useGlobalStore = create<GlobalState>((set, get) => ({
   isWorldLoaded: false,
   setWorldLoaded: (loaded) => set({ isWorldLoaded: loaded }),
+
+  // Hero Layout Mode (defaults to requested minimal-editorial)
+  heroLayoutMode: (typeof window !== 'undefined' && localStorage.getItem('jirjirak_hero_layout') as HeroLayoutMode) || 'minimal-editorial',
+  setHeroLayoutMode: (mode) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('jirjirak_hero_layout', mode);
+    }
+    set({ heroLayoutMode: mode });
+  },
 
   // Theme
   isNight: true,
