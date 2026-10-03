@@ -4,7 +4,6 @@ import { ServicesSection } from '../features/landing/sections/ServicesSection';
 import { FeaturedProjectsSection } from '../features/landing/sections/FeaturedProjectsSection';
 import { CaseStudySection } from '../features/landing/sections/CaseStudySection';
 import { AboutSection } from '../features/landing/sections/AboutSection';
-import { PhilosophySection } from '../features/landing/sections/PhilosophySection';
 import { JournalSection } from '../features/landing/sections/JournalSection';
 import { ContactSection } from '../features/landing/sections/ContactSection';
 
@@ -17,7 +16,6 @@ export default function Home() {
       <FeaturedProjectsSection />
       <CaseStudySection />
       <AboutSection />
-      <PhilosophySection />
       <JournalSection />
       <ContactSection />
     </div>
